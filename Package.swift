@@ -13,6 +13,11 @@ let package = Package(
         .package(url: "https://github.com/kean/Pulse", exact: "5.1.3")
     ],
     targets: [
-        .target(name: "MUDKit"),
+        .target(
+            name: "MUDKit",
+            dependencies: [
+                .product(name: "Pulse", package: "Pulse")
+            ]
+        ),
     ]
 )
