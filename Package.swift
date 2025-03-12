@@ -16,7 +16,9 @@ let package = Package(
         .target(
             name: "MUDKit",
             dependencies: [
-                .product(name: "Pulse", package: "Pulse")
+                .product(name: "Pulse", package: "Pulse"),
+                .product(name: "PulseProxy", package: "Pulse"),
+                .product(name: "PulseUI", package: "Pulse")
             ]
         ),
     ]
