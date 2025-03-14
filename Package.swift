@@ -10,7 +10,8 @@ let package = Package(
         .library(name: "MUDKit", targets: ["MUDKit"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/kean/Pulse", exact: "5.1.3")
+        .package(url: "https://github.com/kean/Pulse", exact: "5.1.3"),
+        .package(url: "https://github.com/Alamofire/Alamofire", exact: "5.10.2")
     ],
     targets: [
         .target(
@@ -18,7 +19,8 @@ let package = Package(
             dependencies: [
                 .product(name: "Pulse", package: "Pulse"),
                 .product(name: "PulseProxy", package: "Pulse"),
-                .product(name: "PulseUI", package: "Pulse")
+                .product(name: "PulseUI", package: "Pulse"),
+                .product(name: "Alamofire", package: "Alamofire")
             ]
         ),
     ]
