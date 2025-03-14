@@ -11,7 +11,7 @@ public struct Log {
     private let logger: Logger
     private let category: String
     
-    init(subsystem: String, category: String) {
+    public init(subsystem: String, category: String) {
         self.logger = Logger(subsystem: subsystem, category: category)
         self.category = category
     }
