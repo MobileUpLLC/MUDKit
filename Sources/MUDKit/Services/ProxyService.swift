@@ -7,8 +7,8 @@ public struct ProxyService {
         configuration: URLSessionConfiguration,
         sessionDelegate: SessionDelegate,
         delegateQueue: OperationQueue
-    ) -> Pulse.URLSessionProxy {
-        return Pulse.URLSessionProxy(
+    ) -> URLSessionProxy {
+        return URLSessionProxy(
             configuration: configuration,
             delegate: sessionDelegate,
             delegateQueue: delegateQueue
