@@ -99,10 +99,10 @@ public struct Log {
         }
         
         let logMessage = """
-                        MUDKit log message start
+                        ========= MUDKit log message START =========
                         \(text)
                         \(jsonString)
-                        MUDKit log message end
+                        ========= MUDKit log message END =========
                         """
         
         return logMessage
