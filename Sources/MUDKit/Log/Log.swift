@@ -3,7 +3,7 @@ import os
 import Pulse
 
 public struct Log {
-    enum LogEntry {
+    public enum LogEntry {
         case text(String)
         case detailed(text: String, parameters: [AnyHashable: Any])
     }
@@ -22,7 +22,7 @@ public struct Log {
     /// 1. Intermediate calculation results for algrorithm.
     ///
     /// Not persisted.
-    func debug(logEntry: LogEntry) {
+    public func debug(logEntry: LogEntry) {
         log(level: .debug, logEntry: logEntry)
     }
     
@@ -33,7 +33,7 @@ public struct Log {
     /// 2. User changed language/theme/settings.
     ///
     /// Persisted only during log collect
-    func info(logEntry: LogEntry) {
+    public func info(logEntry: LogEntry) {
         log(level: .info, logEntry: logEntry)
     }
     
@@ -43,7 +43,7 @@ public struct Log {
     /// 1. Any server requests, successful responses.
     ///
     /// Persisted up to a storage limit
-    func `default`(logEntry: LogEntry) {
+    public func `default`(logEntry: LogEntry) {
         log(level: .default, logEntry: logEntry)
     }
     
@@ -53,7 +53,7 @@ public struct Log {
     /// 1. Server returns error. Error is handled by app, so it's not a bug.
     ///
     /// Persisted up to a storage limit
-    func error(logEntry: LogEntry) {
+    public func error(logEntry: LogEntry) {
         log(level: .error, logEntry: logEntry)
     }
     
@@ -64,7 +64,7 @@ public struct Log {
     /// but can lead to undefined behavior.
     ///
     /// Persisted up to a storage limit
-    func fault(logEntry: LogEntry) {
+    public func fault(logEntry: LogEntry) {
         log(level: .fault, logEntry: logEntry)
     }
     
