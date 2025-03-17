@@ -2,24 +2,16 @@ import SwiftUI
 import PulseUI
 import Pulse
 
-public struct PulseView: View {
-    private let store: LoggerStore
-    private let mode: ConsoleMode
+struct PulseView: View {
+    let store: LoggerStore
+    let mode: ConsoleMode
     
-    public var body: some View {
+    var body: some View {
         ConsoleView()
             .closeButtonHidden()
-    }
-    
-    public init(
-        store: LoggerStore = .shared,
-        mode: ConsoleMode = .all
-    ) {
-        self.store = store
-        self.mode = mode
     }
 }
 
 #Preview {
-    PulseView()
+    PulseView(store: .shared, mode: .all)
 }
