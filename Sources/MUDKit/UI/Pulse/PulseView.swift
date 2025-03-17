@@ -8,6 +8,7 @@ public struct PulseView: View {
     
     public var body: some View {
         ConsoleView()
+            .closeButtonHidden()
     }
     
     public init(
