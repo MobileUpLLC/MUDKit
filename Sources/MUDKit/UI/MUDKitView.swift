@@ -11,6 +11,8 @@ public struct MUDKitView: View {
             .navigationTitle("MUDKit")
         }
     }
+    
+    public init() {}
 }
 
 #Preview {
