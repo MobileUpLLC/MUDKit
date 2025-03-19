@@ -18,10 +18,10 @@ public struct MUDKitConfigurator {
 }
 
 public struct PulseConfiguration {
-    let configuration: URLSessionConfiguration
-    let sessionDelegate: SessionDelegate
-    let delegateQueue: OperationQueue
-    let onFinish: (URLSessionProxy) -> Void
+    public let configuration: URLSessionConfiguration
+    public let sessionDelegate: SessionDelegate
+    public let delegateQueue: OperationQueue
+    public let onFinish: (URLSessionProxy) -> Void
     
     func setup() {
         let proxy = URLSessionProxy(
