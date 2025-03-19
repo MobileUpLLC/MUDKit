@@ -21,13 +21,13 @@ public struct PulseConfiguration {
     private let configuration: URLSessionConfiguration
     private let sessionDelegate: SessionDelegate
     private let delegateQueue: OperationQueue
-    private let onFinish: (URLSessionProxy) -> Void
+    private let onFinish: (URLSession) -> Void
     
     public init(
         configuration: URLSessionConfiguration,
         sessionDelegate: SessionDelegate,
         delegateQueue: OperationQueue,
-        onFinish: @escaping (URLSessionProxy) -> Void
+        onFinish: @escaping (URLSession) -> Void
     ) {
         self.configuration = configuration
         self.sessionDelegate = sessionDelegate
@@ -42,6 +42,6 @@ public struct PulseConfiguration {
             delegateQueue: delegateQueue
         )
         
-        onFinish(proxy)
+        onFinish(proxy.session)
     }
 }
