@@ -4,6 +4,6 @@ public struct MUDKitService {
             .configuration?
             .featureToggleConfiguration?
             .featureToggles
-            .filter { $0.isEnabled && $0.name == name } != nil
+            .contains { $0.isEnabled && $0.name == name } ?? false
     }
 }
