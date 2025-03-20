@@ -25,11 +25,12 @@ struct FeatureTogglesView: View {
                     .buttonStyle(.borderedProminent)
                     .frame(maxWidth: .infinity)
                     .padding(.top)
-                    .background(Color.white)
+                    .background(Color(uiColor: .secondarySystemBackground))
                 }
             }
         }
         .navigationTitle("Feature toggles")
+        .animation(.default, value: featureToggles)
     }
 }
 
