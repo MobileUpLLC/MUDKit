@@ -36,6 +36,7 @@ struct FeatureTogglesView: View {
                     }
                     .buttonStyle(.borderedProminent)
                     .frame(maxWidth: .infinity)
+                    .padding(.top)
                     .background(Color(uiColor: .secondarySystemBackground))
                 }
             }
