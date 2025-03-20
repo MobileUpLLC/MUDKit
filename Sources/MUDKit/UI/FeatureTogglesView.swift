@@ -8,25 +8,28 @@ struct FeatureTogglesView: View {
     ?? []
     
     var body: some View {
-        if featureToggles.isEmpty {
-            Text("Feature toggles are not found")
-        } else {
-            List($featureToggles, id: \.self) { toggle in
-                Toggle(toggle.wrappedValue.convenientName, isOn: toggle.isEnabled)
-            }
-            .safeAreaInset(edge: .bottom) {
-                Button("Save with reboot") {
-                    if let encodedValue = try? JSONEncoder().encode(featureToggles) {
-                        UserDefaults.standard.set(encodedValue, forKey: "featureToggles")
-                        exit(0)
-                    }
+        Group {
+            if featureToggles.isEmpty {
+                Text("Feature toggles are not found")
+            } else {
+                List($featureToggles, id: \.self) { toggle in
+                    Toggle(toggle.wrappedValue.convenientName, isOn: toggle.isEnabled)
                 }
-                .buttonStyle(.borderedProminent)
-                .frame(maxWidth: .infinity)
-                .padding(.top)
-                .background(Color.white)
+                .safeAreaInset(edge: .bottom) {
+                    Button("Save with reboot") {
+                        if let encodedValue = try? JSONEncoder().encode(featureToggles) {
+                            UserDefaults.standard.set(encodedValue, forKey: "featureToggles")
+                            exit(0)
+                        }
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .frame(maxWidth: .infinity)
+                    .padding(.top)
+                    .background(Color.white)
+                }
             }
         }
+        .navigationTitle("Feature toggles")
     }
 }
 
