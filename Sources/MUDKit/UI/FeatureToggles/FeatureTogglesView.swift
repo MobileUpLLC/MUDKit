@@ -43,8 +43,15 @@ struct FeatureTogglesView: View {
         .navigationTitle("Feature toggles")
         .animation(.default, value: featureToggles)
         .onChange(of: isOnlyLocal) { newValue in
-            featureToggles.indices.forEach {
-                featureToggles[$0].isEnabled = featureToggles[$0].isLocal && newValue
+            if newValue {
+                featureToggles.indices.forEach {
+                    featureToggles[$0].isEnabled = featureToggles[$0].isLocal
+                }
+            }
+        }
+        .onChange(of: featureToggles) { newValue in
+            if newValue.filter({ $0.isLocal == false && $0.isEnabled }).isEmpty == false {
+                isOnlyLocal = false
             }
         }
     }
@@ -64,6 +71,12 @@ struct FeatureTogglesView: View {
                 convenientName: "Another feature toggle",
                 isEnabled: false,
                 isLocal: true
+            ),
+            FeatureToggle(
+                name: "backend_feature_toggle_name",
+                convenientName: "Backend feature toggle",
+                isEnabled: false,
+                isLocal: false
             )
         ]
     )
