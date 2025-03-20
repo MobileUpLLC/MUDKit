@@ -1,7 +1,7 @@
 import Foundation
 
 public struct FeatureToggleConfiguration {
-    private let featureToggles: [FeatureToggle]
+    let featureToggles: [FeatureToggle]
     
     public init(featureToggles: [FeatureToggle]) {
         self.featureToggles = featureToggles

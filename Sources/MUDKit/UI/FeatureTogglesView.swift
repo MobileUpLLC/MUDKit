@@ -1,7 +1,11 @@
 import SwiftUI
 
 struct FeatureTogglesView: View {
-    @State var featureToggles: [FeatureToggle] = []
+    @State var featureToggles: [FeatureToggle] = MUDKitConfigurator
+        .configuration?
+        .featureToggleConfiguration?
+        .featureToggles
+    ?? []
     
     var body: some View {
         if featureToggles.isEmpty {

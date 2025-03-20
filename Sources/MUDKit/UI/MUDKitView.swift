@@ -5,7 +5,6 @@ import PulseUI
 public struct MUDKitView: View {
     private let pulseStore: LoggerStore
     private let pulseMode: ConsoleMode
-    private let featureToggles: [FeatureToggle]
     
     public var body: some View {
         NavigationView {
@@ -14,7 +13,7 @@ public struct MUDKitView: View {
                     PulseView(store: pulseStore, mode: pulseMode)
                 }
                 NavigationLink("Feature toggles") {
-                    FeatureTogglesView(featureToggles: featureToggles)
+                    FeatureTogglesView()
                 }
             }
             .navigationTitle("MUDKit")
@@ -23,12 +22,10 @@ public struct MUDKitView: View {
     
     public init(
         pulseStore: LoggerStore = .shared,
-        pulseMode: ConsoleMode = .all,
-        featureToggles: [FeatureToggle] = []
+        pulseMode: ConsoleMode = .all
     ) {
         self.pulseStore = pulseStore
         self.pulseMode = pulseMode
-        self.featureToggles = featureToggles
     }
 }
 
