@@ -1,5 +1,11 @@
 public struct MUDKitConfigurator {
-    public static func setup(pulseConfiguration: PulseConfiguration?) -> MUDKitConfiguration {
-        return MUDKitConfiguration(pulseSession: pulseConfiguration?.setup())
+    public static func setup(
+        pulseConfiguration: PulseConfiguration?,
+        featureToggleConfiguration: FeatureToggleConfiguration?
+    ) -> MUDKitConfiguration {
+        return MUDKitConfiguration(
+            pulseSession: pulseConfiguration?.setup(),
+            featureToggleConfiguration: featureToggleConfiguration
+        )
     }
 }
