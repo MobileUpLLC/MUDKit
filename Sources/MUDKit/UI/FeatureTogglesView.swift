@@ -16,8 +16,10 @@ struct FeatureTogglesView: View {
             }
             .safeAreaInset(edge: .bottom) {
                 Button("Save with reboot") {
-                    UserDefaults.standard.set(featureToggles, forKey: "featureToggles")
-                    exit(0)
+                    if let encodedValue = try? JSONEncoder().encode(featureToggles) {
+                        UserDefaults.standard.set(encodedValue, forKey: "featureToggles")
+                        exit(0)
+                    }
                 }
                 .buttonStyle(.borderedProminent)
                 .frame(maxWidth: .infinity)
