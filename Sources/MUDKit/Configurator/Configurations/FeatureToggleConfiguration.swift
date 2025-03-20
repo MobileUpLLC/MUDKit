@@ -8,7 +8,7 @@ public struct FeatureToggleConfiguration {
     }
 }
 
-public struct FeatureToggle: Hashable, Encodable {
+public struct FeatureToggle: Hashable, Codable {
     let name: String
     var convenientName: String
     var isEnabled: Bool
