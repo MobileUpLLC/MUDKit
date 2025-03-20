@@ -9,7 +9,7 @@ struct FeatureTogglesView: View {
         .configuration?
         .featureToggleConfiguration?
         .featureToggles
-        .filter { $0.isLocal == false }
+        .filter { $0.isLocal == false && $0.isEnabled }
         .isEmpty ?? true
     
     var body: some View {
