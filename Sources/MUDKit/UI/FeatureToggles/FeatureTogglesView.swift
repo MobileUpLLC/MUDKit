@@ -4,16 +4,28 @@ struct FeatureTogglesView: View {
     @State var featureToggles: [FeatureToggle] = MUDKitConfigurator
         .configuration?
         .featureToggleConfiguration?
+        .featureToggles ?? []
+    @State private var isOnlyLocal: Bool = MUDKitConfigurator
+        .configuration?
+        .featureToggleConfiguration?
         .featureToggles
-    ?? []
+        .filter { $0.isLocal == false }
+        .isEmpty ?? true
     
     var body: some View {
         Group {
             if featureToggles.isEmpty {
                 Text("Feature toggles are not found")
             } else {
-                List($featureToggles, id: \.self) { toggle in
-                    Toggle(toggle.wrappedValue.convenientName, isOn: toggle.isEnabled)
+                List {
+                    Section {
+                        ForEach($featureToggles, id: \.self) { toggle in
+                            Toggle(toggle.wrappedValue.convenientName, isOn: toggle.isEnabled)
+                        }
+                        
+                    } header: {
+                        Toggle("Only local features", isOn: $isOnlyLocal)
+                    }
                 }
                 .safeAreaInset(edge: .bottom) {
                     Button("Save with reboot") {
@@ -24,13 +36,17 @@ struct FeatureTogglesView: View {
                     }
                     .buttonStyle(.borderedProminent)
                     .frame(maxWidth: .infinity)
-                    .padding(.top)
                     .background(Color(uiColor: .secondarySystemBackground))
                 }
             }
         }
         .navigationTitle("Feature toggles")
         .animation(.default, value: featureToggles)
+        .onChange(of: isOnlyLocal) { newValue in
+            featureToggles.indices.forEach {
+                featureToggles[$0].isEnabled = featureToggles[$0].isLocal && newValue
+            }
+        }
     }
 }
 
