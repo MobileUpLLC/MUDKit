@@ -9,10 +9,10 @@ public struct FeatureToggleConfiguration {
 }
 
 public struct FeatureToggle: Hashable {
-    private let name: String
-    private var convenientName: String
-    private var isEnabled: Bool
-    private let isLocal: Bool
+    let name: String
+    var convenientName: String
+    var isEnabled: Bool
+    let isLocal: Bool
     
     public init(name: String, convenientName: String, isEnabled: Bool, isLocal: Bool) {
         self.name = name
