@@ -2,7 +2,7 @@ import Foundation
 import os
 import Pulse
 
-public struct Log {
+public struct Log: Sendable {
     public enum LogEntry {
         case text(String)
         case detailed(text: String, parameters: [AnyHashable: Any])

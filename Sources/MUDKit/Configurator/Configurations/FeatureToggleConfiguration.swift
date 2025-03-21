@@ -12,12 +12,10 @@ public struct FeatureToggle: Hashable, Codable {
     let name: String
     var convenientName: String
     var isEnabled: Bool
-    let isLocal: Bool
     
-    public init(name: String, convenientName: String, isEnabled: Bool, isLocal: Bool) {
+    public init(name: String, convenientName: String, isEnabled: Bool) {
         self.name = name
         self.convenientName = convenientName
         self.isEnabled = isEnabled
-        self.isLocal = isLocal
     }
 }

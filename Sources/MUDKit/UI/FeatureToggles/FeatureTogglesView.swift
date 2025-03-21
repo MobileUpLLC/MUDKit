@@ -5,12 +5,7 @@ struct FeatureTogglesView: View {
         .configuration?
         .featureToggleConfiguration?
         .featureToggles ?? []
-    @State private var isOnlyLocal: Bool = MUDKitConfigurator
-        .configuration?
-        .featureToggleConfiguration?
-        .featureToggles
-        .filter { $0.isLocal == false && $0.isEnabled }
-        .isEmpty ?? false
+    @State private var isOverrideBaseConfig: Bool = UserDefaultsUtil.get(for: "isOverrideBaseConfig") ?? false
     
     var body: some View {
         Group {
@@ -21,18 +16,18 @@ struct FeatureTogglesView: View {
                     Section {
                         ForEach($featureToggles, id: \.self) { toggle in
                             Toggle(toggle.wrappedValue.convenientName, isOn: toggle.isEnabled)
+                                .disabled(isOverrideBaseConfig == false)
                         }
                         
                     } header: {
-                        Toggle("Only local features", isOn: $isOnlyLocal)
+                        Toggle("Override base config", isOn: $isOverrideBaseConfig)
                     }
                 }
                 .safeAreaInset(edge: .bottom) {
                     Button("Save with reboot") {
-                        if let encodedValue = try? JSONEncoder().encode(featureToggles) {
-                            UserDefaults.standard.set(encodedValue, forKey: "featureToggles")
-                            exit(0)
-                        }
+                        UserDefaultsUtil.save(value: isOverrideBaseConfig, key: "isOverrideBaseConfig")
+                        UserDefaultsUtil.save(value: featureToggles, key: "featureToggles")
+                        exit(0)
                     }
                     .buttonStyle(.borderedProminent)
                     .frame(maxWidth: .infinity)
@@ -43,18 +38,6 @@ struct FeatureTogglesView: View {
         }
         .navigationTitle("Feature toggles")
         .animation(.default, value: featureToggles)
-        .onChange(of: isOnlyLocal) { newValue in
-            if newValue {
-                featureToggles.indices.forEach {
-                    featureToggles[$0].isEnabled = featureToggles[$0].isLocal
-                }
-            }
-        }
-        .onChange(of: featureToggles) { newValue in
-            if newValue.filter({ $0.isLocal == false && $0.isEnabled }).isEmpty == false {
-                isOnlyLocal = false
-            }
-        }
     }
 }
 
@@ -64,20 +47,17 @@ struct FeatureTogglesView: View {
             FeatureToggle(
                 name: "feature_toggle_name",
                 convenientName: "Feature toggle",
-                isEnabled: false,
-                isLocal: true
+                isEnabled: false
             ),
             FeatureToggle(
                 name: "another_feature_toggle_name",
                 convenientName: "Another feature toggle",
-                isEnabled: false,
-                isLocal: true
+                isEnabled: true
             ),
             FeatureToggle(
                 name: "backend_feature_toggle_name",
                 convenientName: "Backend feature toggle",
-                isEnabled: false,
-                isLocal: false
+                isEnabled: false
             )
         ]
     )
