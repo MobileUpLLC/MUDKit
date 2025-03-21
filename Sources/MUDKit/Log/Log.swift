@@ -76,7 +76,7 @@ public struct Log {
                         ============MUDKit log message START============
                         \(text)
                         \(jsonString)
-                        ============MUDKit log message END============
+                        ============MUDKit log message END==============
                         """
         
         return logMessage
