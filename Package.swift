@@ -1,21 +1,27 @@
 // swift-tools-version: 6.0
-// The swift-tools-version declares the minimum version of Swift required to build this package.
-
 import PackageDescription
 
 let package = Package(
     name: "MUDKit",
+    platforms: [
+        .iOS(.v15)
+    ],
     products: [
-        // Products define the executables and libraries a package produces, making them visible to other packages.
-        .library(
-            name: "MUDKit",
-            targets: ["MUDKit"]),
+        .library(name: "MUDKit", targets: ["MUDKit"]),
+    ],
+    dependencies: [
+        .package(url: "https://github.com/kean/Pulse", exact: "5.1.3"),
+        .package(url: "https://github.com/Alamofire/Alamofire", exact: "5.10.2")
     ],
     targets: [
-        // Targets are the basic building blocks of a package, defining a module or a test suite.
-        // Targets can depend on other targets in this package and products from dependencies.
         .target(
-            name: "MUDKit"),
-
+            name: "MUDKit",
+            dependencies: [
+                .product(name: "Pulse", package: "Pulse"),
+                .product(name: "PulseProxy", package: "Pulse"),
+                .product(name: "PulseUI", package: "Pulse"),
+                .product(name: "Alamofire", package: "Alamofire")
+            ]
+        ),
     ]
 )
