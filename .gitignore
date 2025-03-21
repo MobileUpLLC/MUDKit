@@ -1,14 +1,12 @@
 *.DS_Store
-.DS_Store
-*.generated.swift
 
 ## Build generated
 build/
 DerivedData/
 xcuserdata/
 xcshareddata/
-/.swiftpm
 *.xcuserstate
+*.generated.swift
 
 ## Various settings
 *.pbxuser
@@ -28,6 +26,7 @@ xcshareddata/
 # Swift Package Manager
 .build/
 Package.resolved*
+/.swiftpm
 
 # SwiftLint
 lintOutput.json
