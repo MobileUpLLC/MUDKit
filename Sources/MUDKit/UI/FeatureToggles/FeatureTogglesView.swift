@@ -1,11 +1,16 @@
 import SwiftUI
 
 struct FeatureTogglesView: View {
+    private enum Constants {
+        static let isOverrideBaseConfigKey = "isOverrideBaseConfig"
+        static let featureTogglesKey = "featureToggles"
+    }
+    
     @State var featureToggles: [FeatureToggle] = MUDKitConfigurator
         .configuration?
         .featureToggleConfiguration?
         .featureToggles ?? []
-    @State private var isOverrideBaseConfig: Bool = UserDefaultsUtil.get(for: "isOverrideBaseConfig") ?? false
+    @State private var isOverrideBaseConfig = UserDefaultsUtil.get(for: Constants.isOverrideBaseConfigKey) ?? false
     
     var body: some View {
         Group {
@@ -18,15 +23,14 @@ struct FeatureTogglesView: View {
                             Toggle(toggle.wrappedValue.convenientName, isOn: toggle.isEnabled)
                                 .disabled(isOverrideBaseConfig == false)
                         }
-                        
                     } header: {
                         Toggle("Override base config", isOn: $isOverrideBaseConfig)
                     }
                 }
                 .safeAreaInset(edge: .bottom) {
                     Button("Save with reboot") {
-                        UserDefaultsUtil.save(value: isOverrideBaseConfig, key: "isOverrideBaseConfig")
-                        UserDefaultsUtil.save(value: featureToggles, key: "featureToggles")
+                        UserDefaultsUtil.save(value: isOverrideBaseConfig, key: Constants.isOverrideBaseConfigKey)
+                        UserDefaultsUtil.save(value: featureToggles, key: Constants.featureTogglesKey)
                         exit(0)
                     }
                     .buttonStyle(.borderedProminent)
