@@ -20,11 +20,12 @@ struct UserDefaultsView: View {
                 .multilineTextAlignment(.center)
             Spacer()
             HStack {
-                Button("Clear with reboot") {
+                Button("Clear") {
                     isClearUserDefaultsAlertShown = true
                 }
                 .buttonStyle(.borderedProminent)
             }
+            .padding()
         }
         .navigationTitle("UserDefaults")
         .alert("Are you shure?", isPresented: $isClearUserDefaultsAlertShown) {
@@ -34,12 +35,16 @@ struct UserDefaultsView: View {
                 } else {
                     UserDefaultsService.delete(for: key)
                 }
-                
-                exit(0)
             }
             Button("No", role: .cancel) {
                 isClearUserDefaultsAlertShown = false
             }
+        } message: {
+            Text(
+                key.isEmpty
+                ? "Entire UserDefaults storage will be deleted"
+                : "Value for key \"\(key)\" will be deleted"
+            )
         }
     }
 }

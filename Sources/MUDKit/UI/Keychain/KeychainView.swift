@@ -20,11 +20,12 @@ struct KeychainView: View {
                 .multilineTextAlignment(.center)
             Spacer()
             HStack {
-                Button("Clear with reboot") {
+                Button("Clear") {
                     isClearKeychainAlertShown = true
                 }
                 .buttonStyle(.borderedProminent)
             }
+            .padding()
         }
         .navigationTitle("Keychain")
         .alert("Are you shure?", isPresented: $isClearKeychainAlertShown) {
@@ -34,12 +35,12 @@ struct KeychainView: View {
                 } else {
                     KeychainService.delete(for: key)
                 }
-                
-                exit(0)
             }
             Button("No", role: .cancel) {
                 isClearKeychainAlertShown = false
             }
+        } message: {
+            Text(key.isEmpty ? "Entire Keychain storage will be deleted" : "Value for key \"\(key)\" will be deleted")
         }
     }
 }
