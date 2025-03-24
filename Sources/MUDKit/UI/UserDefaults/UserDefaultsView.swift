@@ -31,6 +31,7 @@ struct UserDefaultsView: View {
             .padding()
         }
         .navigationTitle("UserDefaults")
+        .resignResponderOnTap()
         .alert("Are you shure?", isPresented: $isClearUserDefaultsAlertShown) {
             Button("Yes", role: .destructive) {
                 if key.isEmpty {

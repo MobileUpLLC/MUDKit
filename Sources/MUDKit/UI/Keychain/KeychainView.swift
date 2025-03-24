@@ -31,6 +31,7 @@ struct KeychainView: View {
             .padding()
         }
         .navigationTitle("Keychain")
+        .resignResponderOnTap()
         .alert("Are you shure?", isPresented: $isClearKeychainAlertShown) {
             Button("Yes", role: .destructive) {
                 if key.isEmpty {
