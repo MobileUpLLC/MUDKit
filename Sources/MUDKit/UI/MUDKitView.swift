@@ -33,7 +33,7 @@ public struct MUDKitView: View {
         }
         .alert("Clear UserDefaults", isPresented: $isClearUDAlertShown) {
             Button("OK", role: .destructive) {
-                UserDefaultsUtil.clear()
+                UserDefaultsService.clear()
                 exit(0)
             }
             Button("Cancel", role: .cancel) {
@@ -42,7 +42,7 @@ public struct MUDKitView: View {
         }
         .alert("Clear Keychain", isPresented: $isClearKeychainAlertShown) {
             Button("OK", role: .destructive) {
-                KeychainUtil.clear()
+                KeychainService.clear()
                 exit(0)
             }
             Button("Cancel", role: .cancel) {

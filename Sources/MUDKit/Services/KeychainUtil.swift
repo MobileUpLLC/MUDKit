@@ -1,6 +1,6 @@
 import KeychainSwift
 
-struct KeychainUtil {
+struct KeychainService {
     static func clear() {
         KeychainSwift().clear()        
     }

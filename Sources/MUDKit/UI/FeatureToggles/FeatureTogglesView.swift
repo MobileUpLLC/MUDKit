@@ -10,7 +10,7 @@ struct FeatureTogglesView: View {
         .configuration?
         .featureToggleConfiguration?
         .featureToggles ?? []
-    @State private var isOverrideBaseConfig = UserDefaultsUtil.get(for: Constants.isOverrideBaseConfigKey) ?? false
+    @State private var isOverrideBaseConfig = UserDefaultsService.get(for: Constants.isOverrideBaseConfigKey) ?? false
     
     var body: some View {
         Group {
@@ -29,8 +29,8 @@ struct FeatureTogglesView: View {
                 }
                 .safeAreaInset(edge: .bottom) {
                     Button("Save with reboot") {
-                        UserDefaultsUtil.save(value: isOverrideBaseConfig, key: Constants.isOverrideBaseConfigKey)
-                        UserDefaultsUtil.save(value: featureToggles, key: Constants.featureTogglesKey)
+                        UserDefaultsService.save(value: isOverrideBaseConfig, key: Constants.isOverrideBaseConfigKey)
+                        UserDefaultsService.save(value: featureToggles, key: Constants.featureTogglesKey)
                         exit(0)
                     }
                     .buttonStyle(.borderedProminent)

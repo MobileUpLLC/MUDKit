@@ -1,6 +1,6 @@
 import Foundation
 
-enum UserDefaultsUtil {
+enum UserDefaultsService {
     static func save<T: Encodable>(value: T, key: String) {
         do {
             let data = try JSONEncoder().encode(value)
