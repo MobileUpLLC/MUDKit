@@ -17,6 +17,8 @@ struct KeychainView: View {
                     )
                 .padding()
                 .focused($isFocused)
+                .autocorrectionDisabled()
+                .textInputAutocapitalization(.never)
             Text("If the field above is empty, the entire Keychain storage will be deleted")
                 .padding(.vertical)
                 .multilineTextAlignment(.center)
