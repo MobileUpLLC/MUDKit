@@ -30,6 +30,7 @@ struct UserDefaultsView: View {
             }
             .padding()
         }
+        .background(Color.white)
         .navigationTitle("UserDefaults")
         .resignResponderOnTap()
         .alert("Are you shure?", isPresented: $isClearUserDefaultsAlertShown) {

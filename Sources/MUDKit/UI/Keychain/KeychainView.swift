@@ -30,6 +30,7 @@ struct KeychainView: View {
             }
             .padding()
         }
+        .background(Color.white)
         .navigationTitle("Keychain")
         .resignResponderOnTap()
         .alert("Are you shure?", isPresented: $isClearKeychainAlertShown) {
