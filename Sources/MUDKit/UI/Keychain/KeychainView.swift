@@ -3,6 +3,7 @@ import SwiftUI
 struct KeychainView: View {
     @State private var key: String = ""
     @State private var isClearKeychainAlertShown = false
+    @FocusState private var isFocused: Bool
     
     var body: some View {
         VStack {
@@ -15,12 +16,14 @@ struct KeychainView: View {
                             .stroke(.blue, lineWidth: 2)
                     )
                 .padding()
+                .focused($isFocused)
             Text("If the field above is empty, the entire Keychain storage will be cleared")
                 .padding(.vertical)
                 .multilineTextAlignment(.center)
             Spacer()
             HStack {
                 Button("Clear") {
+                    isFocused = false
                     isClearKeychainAlertShown = true
                 }
                 .buttonStyle(.borderedProminent)

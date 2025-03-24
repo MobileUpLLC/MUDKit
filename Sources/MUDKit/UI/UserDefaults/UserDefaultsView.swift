@@ -3,6 +3,7 @@ import SwiftUI
 struct UserDefaultsView: View {
     @State private var key: String = ""
     @State private var isClearUserDefaultsAlertShown = false
+    @FocusState private var isFocused: Bool
     
     var body: some View {
         VStack {
@@ -15,12 +16,14 @@ struct UserDefaultsView: View {
                             .stroke(.blue, lineWidth: 2)
                     )
                 .padding()
+                .focused($isFocused)
             Text("If the field above is empty, the entire UserDefaults storage will be cleared")
                 .padding(.vertical)
                 .multilineTextAlignment(.center)
             Spacer()
             HStack {
                 Button("Clear") {
+                    isFocused = false
                     isClearUserDefaultsAlertShown = true
                 }
                 .buttonStyle(.borderedProminent)
