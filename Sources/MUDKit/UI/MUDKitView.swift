@@ -6,17 +6,48 @@ public struct MUDKitView: View {
     private let pulseStore: LoggerStore
     private let pulseMode: ConsoleMode
     
+    @State private var isClearUDAlertShown = false
+    @State private var isClearKeychainAlertShown = false
+    
     public var body: some View {
         NavigationView {
             List {
-                NavigationLink("Pulse") {
-                    PulseView(store: pulseStore, mode: pulseMode)
+                Section {
+                    NavigationLink("Pulse") {
+                        PulseView(store: pulseStore, mode: pulseMode)
+                    }
+                    NavigationLink("Feature toggles") {
+                        FeatureTogglesView()
+                    }
                 }
-                NavigationLink("Feature toggles") {
-                    FeatureTogglesView()
+                Section("Clear storage (with reboot)") {
+                    Button("Clear UserDefaults") {
+                        isClearUDAlertShown = true
+                    }
+                    Button("Clear Keychain") {
+                        isClearKeychainAlertShown = true
+                    }
                 }
             }
             .navigationTitle("MUDKit")
+        }
+        .alert("Clear UserDefaults", isPresented: $isClearUDAlertShown) {
+            Button("OK", role: .destructive) {
+                UserDefaultsUtil.clear()
+                exit(0)
+            }
+            Button("Cancel", role: .cancel) {
+                isClearUDAlertShown = false
+            }
+        }
+        .alert("Clear Keychain", isPresented: $isClearKeychainAlertShown) {
+            Button("OK", role: .destructive) {
+                KeychainUtil.clear()
+                exit(0)
+            }
+            Button("Cancel", role: .cancel) {
+                isClearKeychainAlertShown = false
+            }
         }
     }
     

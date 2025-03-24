@@ -1,7 +1,7 @@
 import Foundation
 
 enum UserDefaultsUtil {
-    public static func save<T: Encodable>(value: T, key: String) {
+    static func save<T: Encodable>(value: T, key: String) {
         do {
             let data = try JSONEncoder().encode(value)
             
@@ -11,7 +11,7 @@ enum UserDefaultsUtil {
         }
     }
     
-    public static func get<T: Decodable>(for key: String) -> T? {
+    static func get<T: Decodable>(for key: String) -> T? {
         if let data = UserDefaults.standard.data(forKey: key) {
             let item = try? JSONDecoder().decode(T.self, from: data)
             
@@ -19,5 +19,9 @@ enum UserDefaultsUtil {
         }
         
         return nil
+    }
+    
+    static func clear() {
+        UserDefaults.standard.dictionaryRepresentation().keys.forEach { UserDefaults.standard.removeObject(forKey: $0) }
     }
 }
