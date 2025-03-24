@@ -17,7 +17,7 @@ struct UserDefaultsView: View {
                     )
                 .padding()
                 .focused($isFocused)
-            Text("If the field above is empty, the entire UserDefaults storage will be cleared")
+            Text("If the field above is empty, the entire UserDefaults storage will be deleted")
                 .padding(.vertical)
                 .multilineTextAlignment(.center)
             Spacer()
