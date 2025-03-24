@@ -2,7 +2,7 @@ import SwiftUI
 
 struct KeychainView: View {
     @State private var key: String = ""
-    @State private var isClearKeychainAlertShown = false
+    @State private var isDeleteKeychainAlertShown = false
     @FocusState private var isFocused: Bool
     
     var body: some View {
@@ -22,9 +22,9 @@ struct KeychainView: View {
                 .multilineTextAlignment(.center)
             Spacer()
             HStack {
-                Button("Clear") {
+                Button("Delete") {
                     isFocused = false
-                    isClearKeychainAlertShown = true
+                    isDeleteKeychainAlertShown = true
                 }
                 .buttonStyle(.borderedProminent)
             }
@@ -33,7 +33,7 @@ struct KeychainView: View {
         .background(Color.white)
         .navigationTitle("Keychain")
         .resignResponderOnTap()
-        .alert("Are you shure?", isPresented: $isClearKeychainAlertShown) {
+        .alert("Are you shure?", isPresented: $isDeleteKeychainAlertShown) {
             Button("Yes", role: .destructive) {
                 if key.isEmpty {
                     KeychainService.clear()
@@ -42,7 +42,7 @@ struct KeychainView: View {
                 }
             }
             Button("No", role: .cancel) {
-                isClearKeychainAlertShown = false
+                isDeleteKeychainAlertShown = false
             }
         } message: {
             Text(key.isEmpty ? "Entire Keychain storage will be deleted" : "Value for key \"\(key)\" will be deleted")

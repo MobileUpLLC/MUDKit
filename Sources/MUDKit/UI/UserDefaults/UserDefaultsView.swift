@@ -2,7 +2,7 @@ import SwiftUI
 
 struct UserDefaultsView: View {
     @State private var key: String = ""
-    @State private var isClearUserDefaultsAlertShown = false
+    @State private var isDeleteUserDefaultsAlertShown = false
     @FocusState private var isFocused: Bool
     
     var body: some View {
@@ -22,9 +22,9 @@ struct UserDefaultsView: View {
                 .multilineTextAlignment(.center)
             Spacer()
             HStack {
-                Button("Clear") {
+                Button("Delete") {
                     isFocused = false
-                    isClearUserDefaultsAlertShown = true
+                    isDeleteUserDefaultsAlertShown = true
                 }
                 .buttonStyle(.borderedProminent)
             }
@@ -33,7 +33,7 @@ struct UserDefaultsView: View {
         .background(Color.white)
         .navigationTitle("UserDefaults")
         .resignResponderOnTap()
-        .alert("Are you shure?", isPresented: $isClearUserDefaultsAlertShown) {
+        .alert("Are you shure?", isPresented: $isDeleteUserDefaultsAlertShown) {
             Button("Yes", role: .destructive) {
                 if key.isEmpty {
                     UserDefaultsService.clear()
@@ -42,7 +42,7 @@ struct UserDefaultsView: View {
                 }
             }
             Button("No", role: .cancel) {
-                isClearUserDefaultsAlertShown = false
+                isDeleteUserDefaultsAlertShown = false
             }
         } message: {
             Text(
