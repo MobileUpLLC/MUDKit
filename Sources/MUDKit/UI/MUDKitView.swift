@@ -16,10 +16,10 @@ public struct MUDKitView: View {
                     FeatureTogglesView()
                 }
                 NavigationLink("UserDefaults") {
-                    UserDefaultsView()
+                    StorageView(type: .userDefaults)
                 }
                 NavigationLink("Keychain") {
-                    KeychainView()
+                    StorageView(type: .keychain)
                 }
             }
             .navigationTitle("MUDKit")
