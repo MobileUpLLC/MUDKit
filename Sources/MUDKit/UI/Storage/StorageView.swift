@@ -14,21 +14,11 @@ enum StorageType {
     }
     
     var prompt: String {
-        switch self {
-        case .userDefaults:
-            return "UserDefaults key"
-        case .keychain:
-            return "Keychain key"
-        }
+        return "\(title) key"
     }
     
     var warning: String {
-        switch self {
-        case .userDefaults:
-            return "If the field above is empty, the entire UserDefaults storage will be deleted"
-        case .keychain:
-            return "If the field above is empty, the entire Keychain storage will be deleted"
-        }
+        return "If the field above is empty, the entire \(title) storage will be deleted"
     }
     
     func clear() {
