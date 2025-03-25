@@ -6,6 +6,7 @@ public struct MUDKitView<Content: View>: View {
     private let pulseStore: LoggerStore
     private let pulseMode: ConsoleMode
     @ViewBuilder private let content: () -> Content
+    private let hasCustomContent: Bool
     
     public var body: some View {
         NavigationView {
@@ -24,7 +25,7 @@ public struct MUDKitView<Content: View>: View {
                         StorageView(type: .keychain)
                     }
                 }
-                if Content.self != EmptyView.self {
+                if hasCustomContent {
                     Section("Custom") {
                         content()
                     }
@@ -42,6 +43,7 @@ public struct MUDKitView<Content: View>: View {
         self.pulseStore = pulseStore
         self.pulseMode = pulseMode
         self.content = content
+        self.hasCustomContent = Content.self != EmptyView.self
     }
 }
 
