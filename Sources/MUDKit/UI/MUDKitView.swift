@@ -24,8 +24,10 @@ public struct MUDKitView<Content: View>: View {
                         StorageView(type: .keychain)
                     }
                 }
-                Section("Custom") {
-                    content()
+                if Content.self != EmptyView.self {
+                    Section("Custom") {
+                        content()
+                    }
                 }
             }
             .navigationTitle("MUDKit")
