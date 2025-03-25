@@ -12,9 +12,9 @@ struct UserDefaultsView: View {
                 .padding()
                 .clipShape(RoundedRectangle(cornerRadius: 16))
                 .overlay(
-                        RoundedRectangle(cornerRadius: 16)
-                            .stroke(.blue, lineWidth: 2)
-                    )
+                    RoundedRectangle(cornerRadius: 16)
+                        .stroke(.blue, lineWidth: 2)
+                )
                 .padding()
                 .focused($isFocused)
                 .autocorrectionDisabled()
