@@ -1,4 +1,9 @@
 public actor MUDKitConfigurator {
+    private enum Constants {
+        static let isOverrideBaseConfigKey = "isOverrideBaseConfig"
+        static let featureToggles = "featureToggles"
+    }
+    
     public static var configuration: MUDKitConfiguration?
     
     public static func setup(
@@ -25,9 +30,9 @@ public actor MUDKitConfigurator {
         }
         
         if
-            let isOverrideBaseConfig: Bool = UserDefaultsUtil.get(for: "isOverrideBaseConfig"),
+            let isOverrideBaseConfig: Bool = UserDefaultsUtil.get(for: Constants.isOverrideBaseConfigKey),
             isOverrideBaseConfig,
-            let featureToggles: [FeatureToggle] = UserDefaultsUtil.get(for: "featureToggles")
+            let featureToggles: [FeatureToggle] = UserDefaultsUtil.get(for: Constants.featureToggles)
         {
             return FeatureToggleConfiguration(featureToggles: featureToggles)
         } else {
