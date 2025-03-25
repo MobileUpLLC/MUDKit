@@ -2,24 +2,30 @@ import SwiftUI
 import Pulse
 import PulseUI
 
-public struct MUDKitView: View {
+public struct MUDKitView<Content: View>: View {
     private let pulseStore: LoggerStore
     private let pulseMode: ConsoleMode
+    @ViewBuilder private let content: () -> Content
     
     public var body: some View {
         NavigationView {
             List {
-                NavigationLink("Pulse") {
-                    PulseView(store: pulseStore, mode: pulseMode)
+                Section {
+                    NavigationLink("Pulse") {
+                        PulseView(store: pulseStore, mode: pulseMode)
+                    }
+                    NavigationLink("Feature toggles") {
+                        FeatureTogglesView()
+                    }
+                    NavigationLink("UserDefaults") {
+                        StorageView(type: .userDefaults)
+                    }
+                    NavigationLink("Keychain") {
+                        StorageView(type: .keychain)
+                    }
                 }
-                NavigationLink("Feature toggles") {
-                    FeatureTogglesView()
-                }
-                NavigationLink("UserDefaults") {
-                    StorageView(type: .userDefaults)
-                }
-                NavigationLink("Keychain") {
-                    StorageView(type: .keychain)
+                Section("Custom") {
+                    content()
                 }
             }
             .navigationTitle("MUDKit")
@@ -28,13 +34,19 @@ public struct MUDKitView: View {
     
     public init(
         pulseStore: LoggerStore = .shared,
-        pulseMode: ConsoleMode = .all
+        pulseMode: ConsoleMode = .all,
+        @ViewBuilder content: @escaping () -> Content = { EmptyView() }
     ) {
         self.pulseStore = pulseStore
         self.pulseMode = pulseMode
+        self.content = content
     }
 }
 
 #Preview {
-    MUDKitView()
+    MUDKitView {
+        NavigationLink("Custom action") {
+            Text("Custom action screen")
+        }
+    }
 }
