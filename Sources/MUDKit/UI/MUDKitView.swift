@@ -24,6 +24,9 @@ public struct MUDKitView<Content: View>: View {
                     NavigationLink("Keychain") {
                         StorageView(type: .keychain)
                     }
+                    NavigationLink("Deeplink") {
+                        DeeplinkView()
+                    }
                 }
                 if hasCustomContent {
                     Section("Custom") {
