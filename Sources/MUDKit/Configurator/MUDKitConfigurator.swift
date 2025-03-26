@@ -1,5 +1,6 @@
 public actor MUDKitConfigurator {
     public static var configuration: MUDKitConfiguration?
+    public static var sceneDelegateConfiguration: SceneDelegateConfiguration?
     
     public static func setup(
         pulseConfiguration: PulseConfiguration?,

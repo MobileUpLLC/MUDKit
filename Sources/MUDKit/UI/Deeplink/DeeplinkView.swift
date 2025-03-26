@@ -1,28 +1,21 @@
 import Foundation
 import SwiftUI
 
-enum DeeplinkHandleMethod: String, CaseIterable {
-    case openURLContexts
-    case continueUserActivity
+public enum DeeplinkHandleMethod: String, CaseIterable {
+    case sceneWillConnectTo
+    case sceneOpenURLContexts
+    case sceneContinueUserActivity
 }
 
 struct DeeplinkView: View {
     @State private var deeplink: String = ""
     @FocusState private var isFocused: Bool
-    
-    @State private var selectedOption = DeeplinkHandleMethod.continueUserActivity.rawValue
-    private var options: [String] {
-        var options: [String] = []
-        for method in DeeplinkHandleMethod.allCases {
-            options.append(method.rawValue)
-        }
-        
-        return options
-    }
+    @State private var selectedMethod: DeeplinkHandleMethod?
+    private let methods: [DeeplinkHandleMethod] = DeeplinkHandleMethod.allCases
     
     var body: some View {
         VStack {
-            RadioButtonList(selectedOption: $selectedOption, options: options)
+            RadioButtonList(selectedMethod: $selectedMethod, methods: methods)
                 .padding()
             Spacer()
             InputFieldView(text: $deeplink, prompt: "Deeplink")
@@ -31,14 +24,7 @@ struct DeeplinkView: View {
             HStack {
                 Button("Let's go") {
                     isFocused = false
-                    guard let url = URL(string: deeplink) else { return }
-                    
-                    let activity = NSUserActivity(activityType: NSUserActivityTypeBrowsingWeb)
-                    activity.webpageURL = url
-                    
-                    if let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as? UISceneDelegate {
-                        sceneDelegate.scene!(UIApplication.shared.connectedScenes.first!, continue: activity)
-                    }
+                    handleButtonTap()
                 }
                 .buttonStyle(.borderedProminent)
             }
@@ -48,21 +34,52 @@ struct DeeplinkView: View {
         .navigationTitle("Deeplink")
         .resignResponderOnTap()
     }
+    
+    init(selectedMethod: DeeplinkHandleMethod?) {
+        self.selectedMethod = selectedMethod
+    }
+    
+    private func handleButtonTap() {
+        guard
+            let url = URL(string: deeplink),
+            let scene = UIApplication.shared.connectedScenes.first,
+            let sceneDelegate = scene.delegate
+        else {
+            return
+        }
+        
+        switch selectedMethod {
+        case .sceneWillConnectTo:
+            if let options = MUDKitConfigurator.sceneDelegateConfiguration?.options {
+                sceneDelegate.scene?(scene, willConnectTo: scene.session, options: options)
+            }
+        case .sceneOpenURLContexts:
+            if let contexts = MUDKitConfigurator.sceneDelegateConfiguration?.contexts {
+                sceneDelegate.scene?(scene, openURLContexts: contexts)
+            }
+        case .sceneContinueUserActivity:
+            let activity = NSUserActivity(activityType: NSUserActivityTypeBrowsingWeb)
+            activity.webpageURL = url
+            sceneDelegate.scene?(scene, continue: activity)
+        case nil:
+            return
+        }
+    }
 }
 
 private struct RadioButtonList: View {
-    @Binding var selectedOption: String
-    let options: [String]
+    @Binding var selectedMethod: DeeplinkHandleMethod?
+    let methods: [DeeplinkHandleMethod]
     
     var body: some View {
         VStack(spacing: 16) {
-            ForEach(options, id: \.self) { option in
-                Button(action: { selectedOption = option }) {
+            ForEach(methods, id: \.self) { method in
+                Button(action: { selectedMethod = method }) {
                     HStack {
-                        Text(option)
+                        Text(method.rawValue)
                             .font(.system(size: 20))
                         Spacer()
-                        Image(systemName: selectedOption == option ? "checkmark.circle.fill" : "circle")
+                        Image(systemName: selectedMethod == method ? "checkmark.circle.fill" : "circle")
                             .foregroundColor(.accentColor)
                             .font(.system(size: 20))
                     }
@@ -75,5 +92,5 @@ private struct RadioButtonList: View {
 
 
 #Preview {
-    DeeplinkView()
+    DeeplinkView(selectedMethod: nil)
 }

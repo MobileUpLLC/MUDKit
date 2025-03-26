@@ -5,6 +5,7 @@ import PulseUI
 public struct MUDKitView<Content: View>: View {
     private let pulseStore: LoggerStore
     private let pulseMode: ConsoleMode
+    private let selectedDeeplinkMethod: DeeplinkHandleMethod?
     @ViewBuilder private let content: () -> Content
     private let hasCustomContent: Bool
     
@@ -25,7 +26,7 @@ public struct MUDKitView<Content: View>: View {
                         StorageView(type: .keychain)
                     }
                     NavigationLink("Deeplink") {
-                        DeeplinkView()
+                        DeeplinkView(selectedMethod: selectedDeeplinkMethod)
                     }
                 }
                 if hasCustomContent {
@@ -41,10 +42,12 @@ public struct MUDKitView<Content: View>: View {
     public init(
         pulseStore: LoggerStore = .shared,
         pulseMode: ConsoleMode = .all,
+        selectedDeeplinkMethod: DeeplinkHandleMethod? = nil,
         @ViewBuilder content: @escaping () -> Content = { EmptyView() }
     ) {
         self.pulseStore = pulseStore
         self.pulseMode = pulseMode
+        self.selectedDeeplinkMethod = selectedDeeplinkMethod
         self.content = content
         self.hasCustomContent = Content.self != EmptyView.self
     }
