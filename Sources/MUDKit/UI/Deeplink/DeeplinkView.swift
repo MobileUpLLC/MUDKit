@@ -11,7 +11,7 @@ struct DeeplinkView: View {
     @State private var text: String = ""
     @State private var isError: Bool = false
     @FocusState private var isFocused: Bool
-    private let error: String = "Looks like your text isn't valid url"
+    private let error: String = "The text you entered is not a valid URL"
     
     var body: some View {
         VStack {
