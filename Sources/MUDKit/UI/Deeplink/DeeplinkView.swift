@@ -11,7 +11,6 @@ struct DeeplinkView: View {
     @State private var text: String = ""
     @State private var isError: Bool = false
     @FocusState private var isFocused: Bool
-    private let error: String = "The text you entered is not a valid URL"
     
     var body: some View {
         VStack {
@@ -19,7 +18,7 @@ struct DeeplinkView: View {
             InputFieldView(text: $text, prompt: "Deeplink", keyboardType: .URL, textContentType: .URL)
                 .padding()
             if isError {
-                Text(error)
+                Text("The text you entered is not a valid URL")
             }
             Spacer()
             HStack {
