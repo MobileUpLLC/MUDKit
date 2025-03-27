@@ -1,14 +1,15 @@
 public actor MUDKitConfigurator {
     public static var configuration: MUDKitConfiguration?
-    public static var sceneDelegateConfiguration: SceneDelegateConfiguration?
     
     public static func setup(
         pulseConfiguration: PulseConfiguration?,
-        featureToggleConfiguration: FeatureToggleConfiguration?
+        featureToggleConfiguration: FeatureToggleConfiguration?,
+        deeplinkConfiguration: DeeplinkConfiguration?
     ) throws -> MUDKitConfiguration {
         configuration = MUDKitConfiguration(
             pulseSession: pulseConfiguration?.setup(),
-            featureToggleConfiguration: getFeatureToggleConfiguration(featureToggleConfiguration)
+            featureToggleConfiguration: getFeatureToggleConfiguration(featureToggleConfiguration),
+            deeplinkConfiguration: deeplinkConfiguration
         )
         
         if let configuration {

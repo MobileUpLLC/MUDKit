@@ -8,23 +8,30 @@ public enum DeeplinkHandleMethod: String, CaseIterable {
 }
 
 struct DeeplinkView: View {
-    @State private var deeplink: String = ""
+    @State private var text: String = ""
+    @State private var isError: Bool = false
     @FocusState private var isFocused: Bool
-    @State private var selectedMethod: DeeplinkHandleMethod?
-    private let methods: [DeeplinkHandleMethod] = DeeplinkHandleMethod.allCases
+    private let error: String = "Looks like your text isn't valid url"
     
     var body: some View {
         VStack {
-            RadioButtonList(selectedMethod: $selectedMethod, methods: methods)
-                .padding()
             Spacer()
-            InputFieldView(text: $deeplink, prompt: "Deeplink")
+            InputFieldView(text: $text, prompt: "Deeplink")
                 .padding()
+            if isError {
+                Text(error)
+            }
             Spacer()
             HStack {
                 Button("Let's go") {
+                    guard let url = URL(string: text) else {
+                        isError = true
+                        return
+                    }
+                    
+                    isError = false
                     isFocused = false
-                    handleButtonTap()
+                    MUDKitConfigurator.configuration?.deeplinkConfiguration?.deeplinkHandler(url)
                 }
                 .buttonStyle(.borderedProminent)
             }
@@ -34,63 +41,8 @@ struct DeeplinkView: View {
         .navigationTitle("Deeplink")
         .resignResponderOnTap()
     }
-    
-    init(selectedMethod: DeeplinkHandleMethod?) {
-        self.selectedMethod = selectedMethod
-    }
-    
-    private func handleButtonTap() {
-        guard
-            let url = URL(string: deeplink),
-            let scene = UIApplication.shared.connectedScenes.first,
-            let sceneDelegate = scene.delegate
-        else {
-            return
-        }
-        
-        switch selectedMethod {
-        case .sceneWillConnectTo:
-            if let options = MUDKitConfigurator.sceneDelegateConfiguration?.options {
-                sceneDelegate.scene?(scene, willConnectTo: scene.session, options: options)
-            }
-        case .sceneOpenURLContexts:
-            if let contexts = MUDKitConfigurator.sceneDelegateConfiguration?.contexts {
-                sceneDelegate.scene?(scene, openURLContexts: contexts)
-            }
-        case .sceneContinueUserActivity:
-            let activity = NSUserActivity(activityType: NSUserActivityTypeBrowsingWeb)
-            activity.webpageURL = url
-            sceneDelegate.scene?(scene, continue: activity)
-        case nil:
-            return
-        }
-    }
 }
-
-private struct RadioButtonList: View {
-    @Binding var selectedMethod: DeeplinkHandleMethod?
-    let methods: [DeeplinkHandleMethod]
-    
-    var body: some View {
-        VStack(spacing: 16) {
-            ForEach(methods, id: \.self) { method in
-                Button(action: { selectedMethod = method }) {
-                    HStack {
-                        Text(method.rawValue)
-                            .font(.system(size: 20))
-                        Spacer()
-                        Image(systemName: selectedMethod == method ? "checkmark.circle.fill" : "circle")
-                            .foregroundColor(.accentColor)
-                            .font(.system(size: 20))
-                    }
-                }
-                .foregroundColor(.primary)
-            }
-        }
-    }
-}
-
 
 #Preview {
-    DeeplinkView(selectedMethod: nil)
+    DeeplinkView()
 }
