@@ -16,7 +16,7 @@ struct DeeplinkView: View {
     var body: some View {
         VStack {
             Spacer()
-            InputFieldView(text: $text, prompt: "Deeplink")
+            InputFieldView(text: $text, prompt: "Deeplink", keyboardType: .URL, textContentType: .URL)
                 .padding()
             if isError {
                 Text(error)
