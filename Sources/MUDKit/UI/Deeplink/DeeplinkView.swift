@@ -1,11 +1,4 @@
-import Foundation
 import SwiftUI
-
-public enum DeeplinkHandleMethod: String, CaseIterable {
-    case sceneWillConnectTo
-    case sceneOpenURLContexts
-    case sceneContinueUserActivity
-}
 
 struct DeeplinkView: View {
     @State private var text: String = ""
