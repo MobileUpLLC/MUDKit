@@ -4,12 +4,14 @@ public actor MUDKitConfigurator {
     public static func setup(
         pulseConfiguration: PulseConfiguration?,
         featureToggleConfiguration: FeatureToggleConfiguration?,
-        deeplinkConfiguration: DeeplinkConfiguration?
+        deeplinkConfiguration: DeeplinkConfiguration?,
+        environmentConfiguration: EnvironmentConfiguration?
     ) throws -> MUDKitConfiguration {
         configuration = MUDKitConfiguration(
             pulseSession: pulseConfiguration?.setup(),
             featureToggleConfiguration: getFeatureToggleConfiguration(featureToggleConfiguration),
-            deeplinkConfiguration: deeplinkConfiguration
+            deeplinkConfiguration: deeplinkConfiguration,
+            environmentConfiguration: getEnvironmentConfiguration(environmentConfiguration)
         )
         
         if let configuration {
@@ -35,5 +37,28 @@ public actor MUDKitConfigurator {
         } else {
             return featureToggleConfiguration
         }
+    }
+    
+    private static func getEnvironmentConfiguration(
+        _ environmentConfiguration: EnvironmentConfiguration?
+    ) -> EnvironmentConfiguration? {
+        guard let environmentConfiguration else {
+            if
+                let environments: [Environment] = UserDefaultsService.get(for: "environments"),
+                let defaultEnvironmentName: String = UserDefaultsService.get(for: "defaultEnvironmentName")
+            {
+                return EnvironmentConfiguration(
+                    environments: environments,
+                    defaultEnvironmentName: defaultEnvironmentName
+                )
+            } else {
+                return nil
+            }
+        }
+        
+        UserDefaultsService.set(value: environmentConfiguration.environments, for: "environments")
+        UserDefaultsService.set(value: environmentConfiguration.defaultEnvironmentName, for: "defaultEnvironmentName")
+        
+        return environmentConfiguration
     }
 }
