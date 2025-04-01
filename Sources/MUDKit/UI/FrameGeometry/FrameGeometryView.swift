@@ -13,6 +13,7 @@ struct FrameGeometryView: View {
             Spacer()
         }
         .navigationTitle("Feature toggles")
+        .background(Color(uiColor: .secondarySystemBackground))
         .animation(.default, value: isEnabled)
     }
 }
