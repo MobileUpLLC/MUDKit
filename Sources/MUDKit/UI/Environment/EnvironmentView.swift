@@ -1,10 +1,6 @@
 import SwiftUI
 
 struct EnvironmentView: View {
-    private enum Constants {
-        static let selectedEnvironmentKey = "selectedEnvironment"
-    }
-    
     @State var environments: [Environment] = MUDKitConfigurator
         .configuration?
         .environmentConfiguration?
@@ -37,7 +33,7 @@ struct EnvironmentView: View {
                 }
                 .safeAreaInset(edge: .bottom) {
                     Button("Switch Environment with reboot") {
-                        UserDefaultsService.set(value: selectedEnvironment, for: Constants.selectedEnvironmentKey)
+                        UserDefaultsService.set(value: selectedEnvironment, for: Key.selectedEnvironment.rawValue)
                         exit(0)
                     }
                     .buttonStyle(.borderedProminent)

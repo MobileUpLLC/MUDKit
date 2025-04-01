@@ -1,4 +1,4 @@
-public struct EnvironmentConfiguration {
+public struct EnvironmentConfiguration: Sendable {
     let environments: [Environment]
     let defaultEnvironmentName: String
     let selectedEnvironment: Environment?
@@ -15,15 +15,5 @@ public struct EnvironmentConfiguration {
         } else {
             self.selectedEnvironment = environments.first(where: { $0.name == defaultEnvironmentName })
         }
-    }
-}
-
-public struct Environment: Codable, Hashable {
-    let name: String
-    let parameters: [String: String]
-    
-    public init(name: String, parameters: [String: String]) {
-        self.name = name
-        self.parameters = parameters
     }
 }
