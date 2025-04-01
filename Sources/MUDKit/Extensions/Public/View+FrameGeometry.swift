@@ -10,8 +10,10 @@ private struct FrameGeometry: ViewModifier {
     let color: Color
     
     func body(content: Content) -> some View {
-        content
-            .overlay(GeometryReader(content: overlayContent))
+        if UserDefaultsService.get(for: Key.frameGeometry.rawValue) == true {
+            content
+                .overlay(GeometryReader(content: overlayContent))
+        }
     }
     
     func overlayContent(for geometry: GeometryProxy) -> some View {
