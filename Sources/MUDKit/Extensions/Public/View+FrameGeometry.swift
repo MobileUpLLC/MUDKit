@@ -8,16 +8,14 @@ public extension View {
 
 private struct FrameGeometry: ViewModifier {
     let color: Color
-
+    
     func body(content: Content) -> some View {
         content
-            .overlay(GeometryReader(content: overlay))
+            .overlay(GeometryReader(content: overlayContent))
     }
-
-    func overlay(for geometry: GeometryProxy) -> some View {
-        ZStack(
-            alignment: Alignment(horizontal: .trailing, vertical: .top)
-        ) {
+    
+    func overlayContent(for geometry: GeometryProxy) -> some View {
+        ZStack(alignment: .topTrailing) {
             Rectangle()
                 .strokeBorder(style: StrokeStyle(lineWidth: 1, dash: [5]))
                 .foregroundColor(color)
@@ -27,12 +25,12 @@ private struct FrameGeometry: ViewModifier {
                 .padding(2)
         }
     }
-
+    
     private func describe(_ geometry: GeometryProxy) -> String {
         var information: [String] = []
         let size = "\(Int(geometry.size.width))x\(Int(geometry.size.height))"
         information.append(size)
-
+        
         if geometry.safeAreaInsets != EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0 ) {
             let safeAreaInsets = [
                 geometry.safeAreaInsets.top,
