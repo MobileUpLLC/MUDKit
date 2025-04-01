@@ -13,6 +13,8 @@ private struct FrameGeometry: ViewModifier {
         if UserDefaultsService.get(for: Key.frameGeometry.rawValue) == true {
             content
                 .overlay(GeometryReader(content: overlayContent))
+        } else {
+            content
         }
     }
     
