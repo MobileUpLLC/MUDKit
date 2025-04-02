@@ -3,6 +3,7 @@ import UniformTypeIdentifiers
 extension URL {
     var fileSize: String {
         let values = try? resourceValues(forKeys: [.fileSizeKey])
+        
         if let size = values?.fileSize {
             return ByteCountFormatter.string(fromByteCount: Int64(size), countStyle: .file)
         } else {
@@ -24,34 +25,34 @@ extension URL {
     }
     
     var isDirectory: Bool {
-        let values = try? resourceValues(forKeys: [.isDirectoryKey])
-        return values?.isDirectory == true
+        return (try? resourceValues(forKeys: [.isDirectoryKey]).isDirectory) ?? false
     }
     
     var isImage: Bool {
-        guard let type = contentType else { return false }
-        return type.conforms(to: .image)
+        return contentType?.conforms(to: .image) ?? false
     }
     
     var isVideo: Bool {
-        guard let type = contentType else { return false }
-        return type.conforms(to: .movie)
-            || type.conforms(to: .video)
+        guard let type = contentType else {
+            return false
+        }
+        
+        return type.conforms(to: .movie) || type.conforms(to: .video)
     }
     
     var isWebPage: Bool {
-        guard let type = contentType else { return false }
-        return type.conforms(to: .html)
-            || type.conforms(to: .json)
-            || type.conforms(to: .xml)
+        guard let type = contentType else {
+            return false
+        }
+        
+        return type.conforms(to: .html) || type.conforms(to: .json) || type.conforms(to: .xml)
     }
     
     var isAudio: Bool {
-        guard let type = contentType else { return false }
-        return type.conforms(to: .audio)
+        return contentType?.conforms(to: .audio) ?? false
     }
     
     private var contentType: UTType? {
-        try? resourceValues(forKeys: [.contentTypeKey]).contentType
+        return try? resourceValues(forKeys: [.contentTypeKey]).contentType
     }
 }

@@ -16,6 +16,8 @@ struct FileSystemView: View {
     @State private var files: [URL] = []
     @State private var currentDirectory: URL?
     @State private var selectedFile: IdentifiableURL?
+    @State private var errorMessage = ""
+    @State private var isErrorShown = false
     
     private let fileManager = FileManager.default
     
@@ -29,18 +31,16 @@ struct FileSystemView: View {
                 .buttonStyle(.borderedProminent)
                 .padding()
             }
-            
             if let currentDirectory {
                 Text("Current directory: \(currentDirectory.path)")
                     .font(.caption)
                     .foregroundColor(.gray)
                     .padding()
             }
-            
             List {
                 if
                     let currentDirectory,
-                    currentDirectory != fileManager.urls(for: .documentDirectory, in: .userDomainMask).first!,
+                    currentDirectory != fileManager.urls(for: .documentDirectory, in: .userDomainMask).first,
                     currentDirectory != fileManager.temporaryDirectory
                 {
                     Button {
@@ -49,7 +49,6 @@ struct FileSystemView: View {
                         Image(systemName: "chevron.left")
                     }
                 }
-                
                 ForEach(files, id: \.self) { url in
                     HStack {
                         Button {
@@ -90,54 +89,70 @@ struct FileSystemView: View {
         .sheet(item: $selectedFile) { identifiableURL in
             FileViewer(fileURL: identifiableURL.url)
         }
+        .alert(isPresented: $isErrorShown) {
+            Alert(title: Text("Error"), message: Text(errorMessage), dismissButton: .default(Text("OK")))
+        }
     }
     
     private func loadDirectory(_ type: DirectoryType) {
-        let directoryURL: URL?
-        
-        switch type {
-        case .documents:
-            directoryURL = try? fileManager.url(
-                for: .documentDirectory,
-                in: .userDomainMask,
-                appropriateFor: nil,
-                create: false
-            )
-        case .temporary:
-            directoryURL = fileManager.temporaryDirectory
-        }
-        
-        if let directoryURL {
+        do {
+            let directoryURL: URL
+            
+            switch type {
+            case .documents:
+                directoryURL = try fileManager.url(
+                    for: .documentDirectory,
+                    in: .userDomainMask,
+                    appropriateFor: nil,
+                    create: false
+                )
+            case .temporary:
+                directoryURL = fileManager.temporaryDirectory
+            }
+            
             loadSpecificDirectory(directoryURL)
+        } catch {
+            showError("Failed to find \(type.rawValue.capitalized) directory: \(error.localizedDescription)")
         }
     }
     
     private func loadSpecificDirectory(_ directoryURL: URL) {
-        let directoryContents = try? fileManager.contentsOfDirectory(
-            at: directoryURL,
-            includingPropertiesForKeys: [.isDirectoryKey, .fileSizeKey, .creationDateKey],
-            options: [.skipsHiddenFiles]
-        )
-        
-        currentDirectory = directoryURL
-        
-        if let directoryContents {
+        do {
+            let directoryContents = try fileManager.contentsOfDirectory(
+                at: directoryURL,
+                includingPropertiesForKeys: [.isDirectoryKey, .fileSizeKey, .creationDateKey],
+                options: [.skipsHiddenFiles]
+            )
+            
+            currentDirectory = directoryURL
             files = directoryContents
+        } catch {
+            showError("Failed to load directory: \(error.localizedDescription)")
         }
     }
     
     private func deleteFile(at url: URL) {
-        try? fileManager.removeItem(at: url)
-        
-        if let currentDir = currentDirectory {
-            loadSpecificDirectory(currentDir)
+        do {
+            try fileManager.removeItem(at: url)
+            
+            if let currentDir = currentDirectory {
+                loadSpecificDirectory(currentDir)
+            }
+        } catch {
+            showError("Failed to delete file: \(error.localizedDescription)")
         }
+    }
+    
+    private func showError(_ message: String) {
+        errorMessage = message
+        isErrorShown = true
     }
 }
 
 private struct FileViewer: View {
-    @SwiftUI.Environment(\.dismiss) private var dismiss
     let fileURL: URL
+    
+    @SwiftUI.Environment(\.dismiss) private var dismiss
     
     var body: some View {
         NavigationView {
@@ -183,11 +198,11 @@ private struct FileContentView: View {
 }
 
 private struct AudioPlayerView: View {
-    @State private var player: AVPlayer?
-    @State private var isPlaying: Bool = false
-    
     let url: URL
     
+    @State private var player: AVPlayer?
+    @State private var isPlaying: Bool = false
+
     private var trackName: String { url.deletingPathExtension().lastPathComponent }
     
     var body: some View {
