@@ -45,6 +45,7 @@ private struct FrameGeometry: ViewModifier {
             
             information.append("[\(safeAreaInsets)]")
         }
+        
         return information.joined(separator: " ")
     }
 }
