@@ -14,11 +14,8 @@ extension URL {
     var creationDate: String {
         let values = try? resourceValues(forKeys: [.creationDateKey])
         
-        let formatter = DateFormatter()
-        formatter.dateFormat = "dd.MM.yyyy"
-        
         if let date = values?.creationDate {
-            return formatter.string(from: date)
+            return date.getDotDayMonthYearString()
         } else {
             return "N/A"
         }
