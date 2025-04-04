@@ -2,15 +2,33 @@ import SwiftUI
 import Pulse
 import PulseUI
 
-public struct MUDKitView: View {
+public struct MUDKitView<Content: View>: View {
     private let pulseStore: LoggerStore
     private let pulseMode: ConsoleMode
+    @ViewBuilder private let content: () -> Content
+    private let hasCustomContent: Bool
     
     public var body: some View {
         NavigationView {
             List {
-                NavigationLink("Pulse") {
-                    PulseView(store: pulseStore, mode: pulseMode)
+                Section {
+                    NavigationLink("Pulse") {
+                        PulseView(store: pulseStore, mode: pulseMode)
+                    }
+                    NavigationLink("Feature toggles") {
+                        FeatureTogglesView()
+                    }
+                    NavigationLink("UserDefaults") {
+                        StorageView(type: .userDefaults)
+                    }
+                    NavigationLink("Keychain") {
+                        StorageView(type: .keychain)
+                    }
+                }
+                if hasCustomContent {
+                    Section("Custom") {
+                        content()
+                    }
                 }
                 NavigationLink("Feature toggles") {
                     FeatureTogglesView()
@@ -28,13 +46,20 @@ public struct MUDKitView: View {
     
     public init(
         pulseStore: LoggerStore = .shared,
-        pulseMode: ConsoleMode = .all
+        pulseMode: ConsoleMode = .all,
+        @ViewBuilder content: @escaping () -> Content = { EmptyView() }
     ) {
         self.pulseStore = pulseStore
         self.pulseMode = pulseMode
+        self.content = content
+        self.hasCustomContent = Content.self != EmptyView.self
     }
 }
 
 #Preview {
-    MUDKitView()
+    MUDKitView {
+        NavigationLink("Custom action") {
+            Text("Custom action screen")
+        }
+    }
 }
