@@ -10,10 +10,10 @@ public struct EnvironmentConfiguration: Sendable {
         self.environments = environments
         self.defaultEnvironmentName = defaultEnvironmentName
         
-        if let selectedEnvironment: Environment = UserDefaultsService.get(for: "selectedEnvironment") {
+        if let selectedEnvironment: Environment = UserDefaultsService.get(for: Key.selectedEnvironment.rawValue) {
             self.selectedEnvironment = selectedEnvironment
         } else {
-            self.selectedEnvironment = environments.first(where: { $0.name == defaultEnvironmentName })
+            self.selectedEnvironment = environments.first { $0.name == defaultEnvironmentName }
         }
     }
 }
