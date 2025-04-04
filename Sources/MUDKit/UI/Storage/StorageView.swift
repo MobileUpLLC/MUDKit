@@ -53,17 +53,8 @@ struct StorageView: View {
     var body: some View {
         VStack {
             Spacer()
-            TextField(type.prompt, text: $key, prompt: Text(type.prompt))
+            InputFieldView(text: $key, prompt: type.prompt)
                 .padding()
-                .clipShape(RoundedRectangle(cornerRadius: 16))
-                .overlay(
-                    RoundedRectangle(cornerRadius: 16)
-                        .stroke(isFocused ? .blue : .gray, lineWidth: 2)
-                )
-                .padding()
-                .focused($isFocused)
-                .autocorrectionDisabled()
-                .textInputAutocapitalization(.never)
             Text(type.warning)
                 .padding(.vertical)
                 .multilineTextAlignment(.center)
