@@ -5,7 +5,11 @@ public struct MUDKitConfiguration: Sendable {
     public let featureToggleConfiguration: FeatureToggleConfiguration?
     public let deeplinkConfiguration: DeeplinkConfiguration?
     
-    static let empty = MUDKitConfiguration(pulseSession: nil, featureToggleConfiguration: nil, deeplinkConfiguration: nil)
+    static let empty = MUDKitConfiguration(
+        pulseSession: nil,
+        featureToggleConfiguration: nil,
+        deeplinkConfiguration: nil
+    )
     
     public init(
         pulseSession: URLSession?,
