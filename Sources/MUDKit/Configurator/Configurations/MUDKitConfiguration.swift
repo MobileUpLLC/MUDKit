@@ -9,12 +9,13 @@ public struct MUDKitConfiguration: Sendable {
     static let empty = MUDKitConfiguration(
         pulseSession: nil,
         featureToggleConfiguration: nil,
+        deeplinkConfiguration: nil,
+        environmentConfiguration: nil
     )
-        deeplinkConfiguration: nil
     
     public init(
-        featureToggleConfiguration: FeatureToggleConfiguration?,
         pulseSession: URLSession?,
+        featureToggleConfiguration: FeatureToggleConfiguration?,
         deeplinkConfiguration: DeeplinkConfiguration?,
         environmentConfiguration: EnvironmentConfiguration?
     ) {
