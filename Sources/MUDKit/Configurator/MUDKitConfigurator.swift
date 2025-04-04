@@ -1,23 +1,20 @@
+/// Для конфигуратора используется actor, так как компилятор требует  изолировать изменяемое свойство configuration.
 public actor MUDKitConfigurator {
     public static var configuration: MUDKitConfiguration?
     
     public static func setup(
         pulseConfiguration: PulseConfiguration?,
         featureToggleConfiguration: FeatureToggleConfiguration?
-    ) throws -> MUDKitConfiguration {
+    ) -> MUDKitConfiguration {
         configuration = MUDKitConfiguration(
             pulseSession: pulseConfiguration?.setup(),
-            featureToggleConfiguration: getFeatureToggleConfiguration(featureToggleConfiguration)
+            featureToggleConfiguration: resolveActualFeatureToggleConfiguration(featureToggleConfiguration)
         )
         
-        if let configuration {
-            return configuration
-        } else {
-            throw MUDKitError.setupFailed
-        }
+        return configuration ?? .empty
     }
     
-    private static func getFeatureToggleConfiguration(
+    private static func resolveActualFeatureToggleConfiguration(
         _ featureToggleConfiguration: FeatureToggleConfiguration?
     ) -> FeatureToggleConfiguration? {
         guard let featureToggleConfiguration else {
@@ -25,9 +22,8 @@ public actor MUDKitConfigurator {
         }
         
         if
-            let isOverrideBaseConfig: Bool = UserDefaultsService.get(for: "isOverrideBaseConfig"),
-            isOverrideBaseConfig,
-            let featureToggles: [FeatureToggle] = UserDefaultsService.get(for: "featureToggles")
+            UserDefaultsService.get(for: Key.isOverrideBaseConfig.rawValue) == true,
+            let featureToggles: [FeatureToggle] = UserDefaultsService.get(for: Key.featureToggles.rawValue)
         {
             return FeatureToggleConfiguration(featureToggles: featureToggles)
         } else {

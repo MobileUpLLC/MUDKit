@@ -7,7 +7,7 @@ enum UserDefaultsService {
             
             UserDefaults.standard.set(data, forKey: key)
         } catch {
-            Log.userDefaultsUtil.error(logEntry: .text("Unable to encode value for key \(key): \(error)"))
+            Log.userDefaultsService.error(logEntry: .text("Unable to encode value for key \(key): \(error)"))
         }
     }
     
@@ -26,6 +26,6 @@ enum UserDefaultsService {
     }
     
     static func clear() {
-        UserDefaults.standard.dictionaryRepresentation().keys.forEach { UserDefaults.standard.removeObject(forKey: $0) }
+        UserDefaults.standard.dictionaryRepresentation().keys.forEach { delete(for: $0) }
     }
 }
