@@ -7,7 +7,7 @@ enum UserDefaultsService {
             
             UserDefaults.standard.set(data, forKey: key)
         } catch {
-            Log.userDefaultsUtil.error(logEntry: .text("Unable to encode value for key \(key): \(error)"))
+            Log.userDefaultsService.error(logEntry: .text("Unable to encode value for key \(key): \(error)"))
         }
     }
     
