@@ -18,7 +18,7 @@ private struct FrameGeometry: ViewModifier {
         }
     }
     
-    func overlayContent(for geometry: GeometryProxy) -> some View {
+    private func overlayContent(for geometry: GeometryProxy) -> some View {
         ZStack(alignment: .topTrailing) {
             Rectangle()
                 .strokeBorder(style: StrokeStyle(lineWidth: 1, dash: [5]))
