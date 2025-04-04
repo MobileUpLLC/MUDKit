@@ -1,7 +1,7 @@
 import Foundation
 
 extension Log {
-    static let userDefaultsUtil = Log(subsystem: subsystem, category: "UserDefaultsUtil")
+    static let userDefaultsService = Log(subsystem: subsystem, category: "UserDefaultsService")
     
     private static let subsystem = Bundle.main.bundleIdentifier ?? ""
 }
