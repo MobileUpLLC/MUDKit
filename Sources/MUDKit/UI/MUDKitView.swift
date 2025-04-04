@@ -27,6 +27,9 @@ public struct MUDKitView<Content: View>: View {
                     NavigationLink("Deeplink") {
                         DeeplinkView()
                     }
+                    NavigationLink("Environments") {
+                        EnvironmentView()
+                    }
                 }
                 if hasCustomContent {
                     Section("Custom") {

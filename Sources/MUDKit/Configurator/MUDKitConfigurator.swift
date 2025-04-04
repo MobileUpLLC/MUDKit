@@ -5,12 +5,14 @@ public actor MUDKitConfigurator {
     public static func setup(
         pulseConfiguration: PulseConfiguration?,
         featureToggleConfiguration: FeatureToggleConfiguration?,
-        deeplinkConfiguration: DeeplinkConfiguration?
+        deeplinkConfiguration: DeeplinkConfiguration?,
+        environmentConfiguration: EnvironmentConfiguration?
     ) -> MUDKitConfiguration {
         configuration = MUDKitConfiguration(
             pulseSession: pulseConfiguration?.setup(),
             featureToggleConfiguration: resolveActualFeatureToggleConfiguration(featureToggleConfiguration),
-            deeplinkConfiguration: deeplinkConfiguration
+            deeplinkConfiguration: deeplinkConfiguration,
+            environmentConfiguration: environmentConfiguration
         )
         
         return configuration ?? .empty
