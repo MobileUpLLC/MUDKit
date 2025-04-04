@@ -1,7 +1,7 @@
 import Foundation
 
 enum UserDefaultsService {
-    static func save<T: Encodable>(value: T, key: String) {
+    static func set<T: Encodable>(value: T, for key: String) {
         do {
             let data = try JSONEncoder().encode(value)
             
@@ -19,5 +19,13 @@ enum UserDefaultsService {
         }
         
         return nil
+    }
+    
+    static func delete(for key: String) {
+        UserDefaults.standard.removeObject(forKey: key)
+    }
+    
+    static func clear() {
+        UserDefaults.standard.dictionaryRepresentation().keys.forEach { delete(for: $0) }
     }
 }

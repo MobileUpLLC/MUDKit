@@ -26,8 +26,8 @@ struct FeatureTogglesView: View {
                 }
                 .safeAreaInset(edge: .bottom) {
                     Button("Save with reboot") {
-                        UserDefaultsService.save(value: isOverrideBaseConfig, key: Key.isOverrideBaseConfig.rawValue)
-                        UserDefaultsService.save(value: featureToggles, key: Key.featureToggles.rawValue)
+                        UserDefaultsService.set(value: isOverrideBaseConfig, for: Key.isOverrideBaseConfig.rawValue)
+                        UserDefaultsService.set(value: featureToggles, for: Key.featureToggles.rawValue)
                         exit(0)
                     }
                     .buttonStyle(.borderedProminent)
