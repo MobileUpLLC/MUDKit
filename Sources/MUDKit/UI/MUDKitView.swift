@@ -12,6 +12,9 @@ public struct MUDKitView: View {
                 NavigationLink("Pulse") {
                     PulseView(store: pulseStore, mode: pulseMode)
                 }
+                NavigationLink("Feature toggles") {
+                    FeatureTogglesView()
+                }
             }
             .navigationTitle("MUDKit")
         }
