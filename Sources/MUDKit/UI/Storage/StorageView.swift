@@ -71,7 +71,7 @@ struct StorageView: View {
         .background(Color.white)
         .navigationTitle(type.title)
         .resignResponderOnTap()
-        .alert("Are you shure?", isPresented: $isAlertShown) {
+        .alert("Are you sure?", isPresented: $isAlertShown) {
             Button("Yes", role: .destructive) {
                 if key.isEmpty {
                     type.clear()
