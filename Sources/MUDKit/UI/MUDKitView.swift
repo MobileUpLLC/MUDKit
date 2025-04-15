@@ -27,6 +27,7 @@ public struct MUDKitView<Content: View>: View {
                     NavigationLink("Deeplink") {
                         DeeplinkView()
                     }
+                    FrameGeometryView()
                 }
                 if hasCustomContent {
                     Section("Custom") {
