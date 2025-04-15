@@ -1,23 +1,24 @@
+import Foundation
+
 public struct EnvironmentConfiguration: Sendable {
     let environments: [Environment]
-    let defaultEnvironmentName: String
+    let defaultEnvironmentId: UUID
     let selectedEnvironment: Environment?
     
     public init(
         environments: [Environment],
-        defaultEnvironmentName: String
+        defaultEnvironmentId: UUID
     ) {
         self.environments = environments
-        self.defaultEnvironmentName = defaultEnvironmentName
+        self.defaultEnvironmentId = defaultEnvironmentId
         
-        if let selectedEnvironment: Environment = UserDefaultsService.get(for: Key.selectedEnvironment.rawValue) {
-            if environments.contains(selectedEnvironment) {
-                self.selectedEnvironment = selectedEnvironment
-            } else {
-                self.selectedEnvironment = environments.first { $0.name == defaultEnvironmentName }
-            }
+        if
+            let selectedEnvironment: Environment = UserDefaultsService.get(for: Key.selectedEnvironment.rawValue),
+            environments.contains(selectedEnvironment)
+        {
+            self.selectedEnvironment = selectedEnvironment
         } else {
-            self.selectedEnvironment = environments.first { $0.name == defaultEnvironmentName }
+            self.selectedEnvironment = environments.first { $0.id == defaultEnvironmentId }
         }
     }
 }
