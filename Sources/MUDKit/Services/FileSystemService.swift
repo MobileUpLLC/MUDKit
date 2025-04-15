@@ -12,26 +12,26 @@ public struct FileSystemService {
         case deleteFileError
     }
     
-    private static let fileManager = FileManager.default
+    private static let fileManagerActor = FileManagerActor()
     
-    static func loadDirectory(_ type: DirectoryType) throws -> (URL, [URL]) {
+    static func loadDirectory(_ type: DirectoryType) async throws -> (URL, [URL]) {
         do {
             let directoryURL: URL
             
             switch type {
             case .documents:
-                directoryURL = try fileManager.url(
+                directoryURL = try await fileManagerActor.url(
                     for: .documentDirectory,
                     in: .userDomainMask,
                     appropriateFor: nil,
                     create: false
                 )
             case .temporary:
-                directoryURL = fileManager.temporaryDirectory
+                directoryURL = await fileManagerActor.temporaryDirectory
             }
             
             do {
-                let directoryContents = try loadSpecificDirectory(directoryURL)
+                let directoryContents = try await loadSpecificDirectory(directoryURL)
                 
                 return (directoryURL, directoryContents)
             } catch {
@@ -42,9 +42,9 @@ public struct FileSystemService {
         }
     }
     
-    static func loadSpecificDirectory(_ directoryURL: URL) throws -> [URL] {
+    static func loadSpecificDirectory(_ directoryURL: URL) async throws -> [URL] {
         do {
-            let directoryContents = try fileManager.contentsOfDirectory(
+            let directoryContents = try await fileManagerActor.contentsOfDirectory(
                 at: directoryURL,
                 includingPropertiesForKeys: [.isDirectoryKey, .fileSizeKey, .creationDateKey],
                 options: [.skipsHiddenFiles]
@@ -56,13 +56,13 @@ public struct FileSystemService {
         }
     }
     
-    static func deleteFile(at url: URL, currentDirectory: URL?) throws -> [URL] {
+    static func deleteFile(at url: URL, currentDirectory: URL?) async throws -> [URL] {
         do {
-            try fileManager.removeItem(at: url)
+            try await fileManagerActor.removeItem(at: url)
             
             if let currentDirectory {
                 do {
-                    let directoryContents = try loadSpecificDirectory(currentDirectory)
+                    let directoryContents = try await loadSpecificDirectory(currentDirectory)
                     
                     return directoryContents
                 } catch {

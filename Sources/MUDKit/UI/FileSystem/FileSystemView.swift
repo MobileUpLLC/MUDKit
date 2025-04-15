@@ -18,10 +18,14 @@ struct FileSystemView: View {
             HStack {
                 Group {
                     Button(FileSystemService.DirectoryType.documents.rawValue.capitalized) {
-                        loadDirectory(type: .documents)
+                        Task {
+                            await loadDirectory(type: .documents)
+                        }
                     }
                     Button(FileSystemService.DirectoryType.temporary.rawValue.capitalized) {
-                        loadDirectory(type: .temporary)
+                        Task {
+                            await loadDirectory(type: .temporary)
+                        }
                     }
                 }
                 .buttonStyle(.borderedProminent)
@@ -40,7 +44,9 @@ struct FileSystemView: View {
                     currentDirectory != FileManager.default.temporaryDirectory
                 {
                     Button {
-                        loadSpecificDirectory(currentDirectory.deletingLastPathComponent())
+                        Task {
+                            await loadSpecificDirectory(currentDirectory.deletingLastPathComponent())
+                        }
                     } label: {
                         Image(systemName: "chevron.left")
                     }
@@ -49,7 +55,9 @@ struct FileSystemView: View {
                     HStack {
                         Button {
                             if FileSystemService.getIsDirectory(for: url) {
-                                loadSpecificDirectory(url)
+                                Task {
+                                    await loadSpecificDirectory(url)
+                                }
                             } else {
                                 selectedFile = IdentifiableURL(url: url)
                             }
@@ -64,8 +72,12 @@ struct FileSystemView: View {
                         .buttonStyle(.plain)
                         Spacer()
                         if FileSystemService.getIsDirectory(for: url) == false {
-                            Button("Delete") { deleteFile(at: url) }
-                                .foregroundColor(.red)
+                            Button("Delete") {
+                                Task {
+                                    await deleteFile(at: url)
+                                }
+                            }
+                            .foregroundColor(.red)
                         }
                     }
                 }
@@ -80,9 +92,9 @@ struct FileSystemView: View {
         }
     }
     
-    private func loadDirectory(type: FileSystemService.DirectoryType) {
+    private func loadDirectory(type: FileSystemService.DirectoryType) async {
         do {
-            let (directory, files) = try FileSystemService.loadDirectory(type)
+            let (directory, files) = try await FileSystemService.loadDirectory(type)
             currentDirectory = directory
             self.files = files
         } catch {
@@ -90,18 +102,18 @@ struct FileSystemView: View {
         }
     }
     
-    private func loadSpecificDirectory(_ directoryURL: URL) {
+    private func loadSpecificDirectory(_ directoryURL: URL) async {
         do {
-            files = try FileSystemService.loadSpecificDirectory(directoryURL)
+            files = try await FileSystemService.loadSpecificDirectory(directoryURL)
             currentDirectory = directoryURL
         } catch {
             showError("Failed to load directory")
         }
     }
     
-    private func deleteFile(at url: URL) {
+    private func deleteFile(at url: URL) async {
         do {
-            files = try FileSystemService.deleteFile(at: url, currentDirectory: currentDirectory)
+            files = try await FileSystemService.deleteFile(at: url, currentDirectory: currentDirectory)
         } catch {
             showError("Failed to delete file: \(error.localizedDescription)")
         }
@@ -126,7 +138,6 @@ private struct FileViewer: View {
         }
     }
 }
-
 
 #Preview {
     FileSystemView()
