@@ -33,6 +33,7 @@ public struct MUDKitView<Content: View>: View {
                     NavigationLink("File System") {
                         FileSystemView()
                     }
+                    FrameGeometryView()
                 }
                 if hasCustomContent {
                     Section("Custom") {
