@@ -3,4 +3,5 @@ enum Key: String {
     case isOverrideBaseConfig
     case featureToggles
     case frameGeometry
+    case selectedEnvironment
 }
