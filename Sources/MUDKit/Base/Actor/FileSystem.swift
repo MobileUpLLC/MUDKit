@@ -1,7 +1,11 @@
 import Foundation
 
-actor FileManagerActor {
+actor FileSystem {
     let fileManager = FileManager.default
+    
+    var temporaryDirectory: URL {
+        fileManager.temporaryDirectory
+    }
     
     func url(
         for directory: FileManager.SearchPathDirectory,
@@ -10,11 +14,7 @@ actor FileManagerActor {
         create: Bool
     ) throws -> URL {
         try fileManager.url(for: directory, in: domain, appropriateFor: url, create: create)
-    }
-    
-    var temporaryDirectory: URL {
-        fileManager.temporaryDirectory
-    }
+    }    
     
     func contentsOfDirectory(
         at url: URL,

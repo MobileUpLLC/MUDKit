@@ -1,5 +1,4 @@
 import SwiftUI
-import UniformTypeIdentifiers
 
 struct FileSystemView: View {
     private struct IdentifiableURL: Identifiable {
@@ -98,7 +97,7 @@ struct FileSystemView: View {
             currentDirectory = directory
             self.files = files
         } catch {
-            showError("Failed to find \(type.rawValue.capitalized) directory")
+            showErrorMessage(error)
         }
     }
     
@@ -107,7 +106,7 @@ struct FileSystemView: View {
             files = try await FileSystemService.loadSpecificDirectory(directoryURL)
             currentDirectory = directoryURL
         } catch {
-            showError("Failed to load directory")
+            showErrorMessage(error)
         }
     }
     
@@ -115,12 +114,17 @@ struct FileSystemView: View {
         do {
             files = try await FileSystemService.deleteFile(at: url, currentDirectory: currentDirectory)
         } catch {
-            showError("Failed to delete file: \(error.localizedDescription)")
+            showErrorMessage(error)
         }
     }
     
-    private func showError(_ message: String) {
-        errorMessage = message
+    private func showErrorMessage(_ error: Error) {
+        if let fileSystemServiceError = error as? FileSystemService.FileSystemServiceError {
+            errorMessage = fileSystemServiceError.message
+        } else {
+            errorMessage = error.localizedDescription
+        }
+        
         isErrorShown = true
     }
 }
