@@ -20,11 +20,11 @@ public struct MUDKitConfiguration: Sendable {
     )
     
     /// Initializes the MUDKit configuration with provided settings.
-        /// - Parameters:
-        ///   - pulseSession: The URL session for Pulse logging. Optional.
-        ///   - featureToggleConfiguration: Configuration for feature toggles. Optional.
-        ///   - deeplinkConfiguration: Configuration for deeplink handling. Optional.
-        ///   - environmentConfiguration: Configuration for environments. Optional.
+    /// - Parameters:
+    ///   - pulseSession: The URL session for Pulse logging. Optional.
+    ///   - featureToggleConfiguration: Configuration for feature toggles. Optional.
+    ///   - deeplinkConfiguration: Configuration for deeplink handling. Optional.
+    ///   - environmentConfiguration: Configuration for environments. Optional.
     public init(
         pulseSession: URLSession?,
         featureToggleConfiguration: FeatureToggleConfiguration?,

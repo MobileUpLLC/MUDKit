@@ -9,7 +9,7 @@ public struct Environment: Codable, Hashable, Identifiable, Sendable {
     /// A dictionary of environment-specific parameters.
     let parameters: [String: String]
     
-    /// Initializes an environment with a name and parameters.
+    /// Initializes an environment.
         /// - Parameters:
         ///   - id: The UUID of the environment.
         ///   - name: The name of the environment.

@@ -1,8 +1,7 @@
 import Foundation
 
-/// Utility for managing file system operations.
-public struct FileSystemService {
-    /// Enum representing directory types.
+/// A thread-safe service for managing file system operations
+actor FileSystemService {
     enum DirectoryType: String {
         /// The documents directory.
         case documents
@@ -32,7 +31,11 @@ public struct FileSystemService {
         }
     }
     
-    private static let fileSystem = FileSystem()
+    private static var temporaryDirectory: URL {
+        fileManager.temporaryDirectory
+    }
+    
+    private static let fileManager = FileManager.default
     
     /// Loads the contents of a specified directory.
         /// - Parameter type: The type of directory to load (`.documents` or `.temporary`).
@@ -44,14 +47,14 @@ public struct FileSystemService {
         do {
             switch type {
             case .documents:
-                directoryURL = try await fileSystem.url(
+                directoryURL = try url(
                     for: .documentDirectory,
                     in: .userDomainMask,
                     appropriateFor: nil,
                     create: false
                 )
             case .temporary:
-                directoryURL = await fileSystem.temporaryDirectory
+                directoryURL = temporaryDirectory
             }
         } catch {
             Log.fileSystemService.error(
@@ -75,7 +78,7 @@ public struct FileSystemService {
         /// - Throws: `FileSystemServiceError.loadDirectoryError` if the directory cannot be loaded.
     static func loadSpecificDirectory(_ directoryURL: URL) async throws -> [URL] {
         do {
-            let directoryContents = try await fileSystem.contentsOfDirectory(
+            let directoryContents = try contentsOfDirectory(
                 at: directoryURL,
                 includingPropertiesForKeys: [.isDirectoryKey, .fileSizeKey, .creationDateKey],
                 options: [.skipsHiddenFiles]
@@ -99,7 +102,7 @@ public struct FileSystemService {
         /// - Throws: `FileSystemServiceError` if the file cannot be deleted or the directory cannot be reloaded.
     static func deleteFile(at url: URL, currentDirectory: URL?) async throws -> [URL] {
         do {
-            try await fileSystem.removeItem(at: url)
+            try removeItem(at: url)
         } catch {
             Log.fileSystemService.error(
                 logEntry: .text(FileSystemServiceError.deleteFileError.message + ": \(url)")
@@ -128,5 +131,26 @@ public struct FileSystemService {
         /// - Returns: `true` if the URL is a directory, `false` otherwise.
     static func getIsDirectory(for url: URL) -> Bool {
         return (try? url.resourceValues(forKeys: [.isDirectoryKey]).isDirectory) ?? false
+    }
+    
+    private static func url(
+        for directory: FileManager.SearchPathDirectory,
+        in domain: FileManager.SearchPathDomainMask,
+        appropriateFor url: URL?,
+        create: Bool
+    ) throws -> URL {
+        try fileManager.url(for: directory, in: domain, appropriateFor: url, create: create)
+    }
+    
+    private static func contentsOfDirectory(
+        at url: URL,
+        includingPropertiesForKeys keys: [URLResourceKey]?,
+        options: FileManager.DirectoryEnumerationOptions
+    ) throws -> [URL] {
+        try fileManager.contentsOfDirectory(at: url, includingPropertiesForKeys: keys, options: options)
+    }
+    
+    private static func removeItem(at url: URL) throws {
+        try fileManager.removeItem(at: url)
     }
 }

@@ -1,14 +1,7 @@
-//
-//  ExampleApp.swift
-//  Example
-//
-//  Created by MobileUp on 20.04.2025.
-//
-
 import SwiftUI
 
 @main
-struct ExampleApp: App {
+struct mudkit_example_iosApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()

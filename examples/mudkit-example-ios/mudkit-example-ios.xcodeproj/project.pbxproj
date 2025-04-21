@@ -7,45 +7,45 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		08EE07CE2DB57DA200D4AE15 /* MUDKit in Frameworks */ = {isa = PBXBuildFile; productRef = 08EE07CD2DB57DA200D4AE15 /* MUDKit */; };
+		08F22F8F2DB685BA00C92B16 /* MUDKit in Frameworks */ = {isa = PBXBuildFile; productRef = 08F22F8E2DB685BA00C92B16 /* MUDKit */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		08EE07A92DB5733000D4AE15 /* Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		08F22F7E2DB6855900C92B16 /* mudkit-example-ios.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "mudkit-example-ios.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		08EE07AB2DB5733000D4AE15 /* Example */ = {
+		08F22F802DB6855900C92B16 /* mudkit-example-ios */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = Example;
+			path = "mudkit-example-ios";
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		08EE07A62DB5733000D4AE15 /* Frameworks */ = {
+		08F22F7B2DB6855900C92B16 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				08EE07CE2DB57DA200D4AE15 /* MUDKit in Frameworks */,
+				08F22F8F2DB685BA00C92B16 /* MUDKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		08EE07A02DB5733000D4AE15 = {
+		08F22F752DB6855900C92B16 = {
 			isa = PBXGroup;
 			children = (
-				08EE07AB2DB5733000D4AE15 /* Example */,
-				08EE07AA2DB5733000D4AE15 /* Products */,
+				08F22F802DB6855900C92B16 /* mudkit-example-ios */,
+				08F22F7F2DB6855900C92B16 /* Products */,
 			);
 			sourceTree = "<group>";
 		};
-		08EE07AA2DB5733000D4AE15 /* Products */ = {
+		08F22F7F2DB6855900C92B16 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				08EE07A92DB5733000D4AE15 /* Example.app */,
+				08F22F7E2DB6855900C92B16 /* mudkit-example-ios.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -53,68 +53,68 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		08EE07A82DB5733000D4AE15 /* Example */ = {
+		08F22F7D2DB6855900C92B16 /* mudkit-example-ios */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 08EE07B52DB5733200D4AE15 /* Build configuration list for PBXNativeTarget "Example" */;
+			buildConfigurationList = 08F22F8A2DB6855B00C92B16 /* Build configuration list for PBXNativeTarget "mudkit-example-ios" */;
 			buildPhases = (
-				08EE07A52DB5733000D4AE15 /* Sources */,
-				08EE07A62DB5733000D4AE15 /* Frameworks */,
-				08EE07A72DB5733000D4AE15 /* Resources */,
+				08F22F7A2DB6855900C92B16 /* Sources */,
+				08F22F7B2DB6855900C92B16 /* Frameworks */,
+				08F22F7C2DB6855900C92B16 /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				08EE07AB2DB5733000D4AE15 /* Example */,
+				08F22F802DB6855900C92B16 /* mudkit-example-ios */,
 			);
-			name = Example;
+			name = "mudkit-example-ios";
 			packageProductDependencies = (
-				08EE07CD2DB57DA200D4AE15 /* MUDKit */,
+				08F22F8E2DB685BA00C92B16 /* MUDKit */,
 			);
-			productName = Example;
-			productReference = 08EE07A92DB5733000D4AE15 /* Example.app */;
+			productName = "mudkit-example-ios";
+			productReference = 08F22F7E2DB6855900C92B16 /* mudkit-example-ios.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		08EE07A12DB5733000D4AE15 /* Project object */ = {
+		08F22F762DB6855900C92B16 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1630;
 				LastUpgradeCheck = 1630;
 				TargetAttributes = {
-					08EE07A82DB5733000D4AE15 = {
+					08F22F7D2DB6855900C92B16 = {
 						CreatedOnToolsVersion = 16.3;
 					};
 				};
 			};
-			buildConfigurationList = 08EE07A42DB5733000D4AE15 /* Build configuration list for PBXProject "Example" */;
+			buildConfigurationList = 08F22F792DB6855900C92B16 /* Build configuration list for PBXProject "mudkit-example-ios" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
 				Base,
 			);
-			mainGroup = 08EE07A02DB5733000D4AE15;
+			mainGroup = 08F22F752DB6855900C92B16;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				08EE07CC2DB57DA200D4AE15 /* XCLocalSwiftPackageReference "../../MUDKit" */,
+				08F22F8D2DB685BA00C92B16 /* XCLocalSwiftPackageReference "../../../MUDKit" */,
 			);
 			preferredProjectObjectVersion = 77;
-			productRefGroup = 08EE07AA2DB5733000D4AE15 /* Products */;
+			productRefGroup = 08F22F7F2DB6855900C92B16 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				08EE07A82DB5733000D4AE15 /* Example */,
+				08F22F7D2DB6855900C92B16 /* mudkit-example-ios */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		08EE07A72DB5733000D4AE15 /* Resources */ = {
+		08F22F7C2DB6855900C92B16 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -124,7 +124,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		08EE07A52DB5733000D4AE15 /* Sources */ = {
+		08F22F7A2DB6855900C92B16 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -134,7 +134,7 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
-		08EE07B32DB5733200D4AE15 /* Debug */ = {
+		08F22F882DB6855B00C92B16 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -196,7 +196,7 @@
 			};
 			name = Debug;
 		};
-		08EE07B42DB5733200D4AE15 /* Release */ = {
+		08F22F892DB6855B00C92B16 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -250,12 +250,12 @@
 			};
 			name = Release;
 		};
-		08EE07B62DB5733200D4AE15 /* Debug */ = {
+		08F22F8B2DB6855B00C92B16 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = Example/Example.entitlements;
+				CODE_SIGN_ENTITLEMENTS = "mudkit-example-ios/mudkit_example_ios.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 4778UMCE49;
@@ -272,12 +272,12 @@
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 15;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.5;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 15.4;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.MobileUp.Example;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.MobileUp.mudkit-example-ios";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
 				SDKROOT = auto;
@@ -290,12 +290,12 @@
 			};
 			name = Debug;
 		};
-		08EE07B72DB5733200D4AE15 /* Release */ = {
+		08F22F8C2DB6855B00C92B16 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = Example/Example.entitlements;
+				CODE_SIGN_ENTITLEMENTS = "mudkit-example-ios/mudkit_example_ios.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 4778UMCE49;
@@ -312,12 +312,12 @@
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 15;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.5;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 15.4;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.MobileUp.Example;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.MobileUp.mudkit-example-ios";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
 				SDKROOT = auto;
@@ -333,20 +333,20 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		08EE07A42DB5733000D4AE15 /* Build configuration list for PBXProject "Example" */ = {
+		08F22F792DB6855900C92B16 /* Build configuration list for PBXProject "mudkit-example-ios" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				08EE07B32DB5733200D4AE15 /* Debug */,
-				08EE07B42DB5733200D4AE15 /* Release */,
+				08F22F882DB6855B00C92B16 /* Debug */,
+				08F22F892DB6855B00C92B16 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		08EE07B52DB5733200D4AE15 /* Build configuration list for PBXNativeTarget "Example" */ = {
+		08F22F8A2DB6855B00C92B16 /* Build configuration list for PBXNativeTarget "mudkit-example-ios" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				08EE07B62DB5733200D4AE15 /* Debug */,
-				08EE07B72DB5733200D4AE15 /* Release */,
+				08F22F8B2DB6855B00C92B16 /* Debug */,
+				08F22F8C2DB6855B00C92B16 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -354,18 +354,18 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		08EE07CC2DB57DA200D4AE15 /* XCLocalSwiftPackageReference "../../MUDKit" */ = {
+		08F22F8D2DB685BA00C92B16 /* XCLocalSwiftPackageReference "../../../MUDKit" */ = {
 			isa = XCLocalSwiftPackageReference;
-			relativePath = ../../MUDKit;
+			relativePath = ../../../MUDKit;
 		};
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		08EE07CD2DB57DA200D4AE15 /* MUDKit */ = {
+		08F22F8E2DB685BA00C92B16 /* MUDKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = MUDKit;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
-	rootObject = 08EE07A12DB5733000D4AE15 /* Project object */;
+	rootObject = 08F22F762DB6855900C92B16 /* Project object */;
 }

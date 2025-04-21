@@ -9,10 +9,10 @@ public struct PulseConfiguration {
     private let delegateQueue: OperationQueue
     
     /// Initializes the Pulse configuration with URL session settings.
-        /// - Parameters:
-        ///   - configuration: The URL session configuration to use.
-        ///   - sessionDelegate: The session delegate for handling session events.
-        ///   - delegateQueue: The operation queue for delegate callbacks.
+    /// - Parameters:
+    ///   - configuration: The URL session configuration to use.
+    ///   - sessionDelegate: The session delegate for handling session events.
+    ///   - delegateQueue: The operation queue for delegate callbacks.
     public init(
         configuration: URLSessionConfiguration,
         sessionDelegate: SessionDelegate,
@@ -24,7 +24,7 @@ public struct PulseConfiguration {
     }
     
     /// Creates and returns a configured URL session for Pulse logging.
-        /// - Returns: A `URLSession` instance with Pulse logging enabled.
+    /// - Returns: A `URLSession` instance with Pulse logging enabled.
     func setup() -> URLSession {
         return URLSessionProxy(
             configuration: configuration,

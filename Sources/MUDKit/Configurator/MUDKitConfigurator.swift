@@ -3,12 +3,12 @@ public actor MUDKitConfigurator {
     public static var configuration: MUDKitConfiguration?
     
     /// Configures MUDKit with provided settings and returns the resulting configuration.
-        /// - Parameters:
-        ///   - pulseConfiguration: Configuration for Pulse network logging. Optional.
-        ///   - featureToggleConfiguration: Configuration for feature toggles. Optional.
-        ///   - deeplinkConfiguration: Configuration for handling deeplinks. Optional.
-        ///   - environmentConfiguration: Configuration for environment settings. Optional.
-        /// - Returns: The configured `MUDKitConfiguration` or an empty configuration if setup fails.
+    /// - Parameters:
+    ///   - pulseConfiguration: Configuration for Pulse network logging. Optional.
+    ///   - featureToggleConfiguration: Configuration for feature toggles. Optional.
+    ///   - deeplinkConfiguration: Configuration for handling deeplinks. Optional.
+    ///   - environmentConfiguration: Configuration for environment settings. Optional.
+    /// - Returns: The configured `MUDKitConfiguration` or an empty configuration if setup fails.
     public static func setup(
         pulseConfiguration: PulseConfiguration?,
         featureToggleConfiguration: FeatureToggleConfiguration?,

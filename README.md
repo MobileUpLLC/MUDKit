@@ -1,48 +1,36 @@
 # MUDKit
 
-**MUDKit** — iOS-фреймворк, разработанный для упрощения разработки и отладки приложений. Он предоставляет набор инструментов для логирования, управления фича-тогглами, настройки окружений, обработки диплинков, работы с файловой системой и хранилищем, а также интеграцию с Pulse для мониторинга сетевых запросов.
+**MUDKit** is an iOS framework designed to simplify app development and debugging.
 
-## Возможности
+## Features
 
-- **Логирование**: Гибкая система логирования с поддержкой уровней (debug, info, error, fault) и интеграцией с Pulse.
-- **Фича-тогглы**: Управление функциональностью приложения с возможностью переопределения настроек через UserDefaults.
-- **Окружения**: Поддержка нескольких окружений (например, dev, prod) с выбором активного окружения.
-- **Диплинки**: Обработка диплинков с использованием конфигурируемого обработчика.
-- **Файловая система**: Просмотр, удаление и воспроизведение файлов (текст, изображения, видео, аудио, HTML/JSON/XML).
-- **Хранилище**: Упрощённая работа с UserDefaults и Keychain для сохранения и удаления данных.
-- **Pulse**: Логирование сетевых запросов с использованием Alamofire и Pulse.
-- **UI для отладки**: Интуитивно понятный интерфейс через `MUDKitView` для доступа ко всем функциям.
+- **Logging**: Flexible logging system with support for levels (debug, info, error, fault) and Pulse integration.
+- **Feature Toggles**: Manage app functionality with the ability to override settings via UserDefaults.
+- **Environments**: Support for multiple environments (e.g., dev, prod) with active environment selection.
+- **Deeplinks**: Handle deeplinks using a configurable handler.
+- **File System**: View, delete, and open files in .tmp and .documents directories.
+- **Pulse**: Log network requests using Alamofire and Pulse.
+- **Frame Geometry**: Debug SwiftUI view frames by overlaying a dashed border, displaying size and safe area insets, configurable via UserDefaults with customizable border color.
+- **Debug UI**: Intuitive interface via `MUDKitView` for accessing all framework features.
 
-## Требования
+## Requirements
 
-- iOS 15.0 и выше
-- Xcode 13.0 и выше
-- Swift 5.5 и выше
-- Зависимости: Pulse, Alamofire, KeychainSwift
+- iOS 15.0 or later
+- Xcode 13.0 or later
+- Swift 5.5 or later
+- Dependencies: Pulse, Alamofire, KeychainSwift
 
-## Установка
+## Usage
 
-MUDKit можно установить через Swift Package Manager. Добавьте следующий пакет в ваш `Package.swift` или через интерфейс Xcode:
+### Initializing MUDKit
 
-```swift
-dependencies: [
-    .package(url: "https://github.com/MobileUpLLC/MUDKit.git", .upToNextMajor(from: "1.0.0"))
-]
-```
-
-В Xcode:
-1. Перейдите в `File > Add Packages`.
-2. Введите URL репозитория: `https://github.com/MobileUpLLC/MUDKit.git`.
-3. Выберите подходящую версию и добавьте пакет.
-
-## Использование
-
-### Инициализация MUDKit
-
-Настройте фреймворк с помощью `MUDKitConfigurator`. Пример настройки с поддержкой Pulse, фича-тогглов, диплинков и окружений:
+Configure the framework using `MUDKitConfigurator`. Example setup with Pulse, feature toggles, deeplinks, and environments:
 
 ```swift
 import MUDKit
+
+let devEnvironment = Environment(id: UUID(), name: "dev", parameters: ["api": "https://dev.api.com"])
+let prodEnvironment = Environment(id: UUID(), name: "prod", parameters: ["api": "https://prod.api.com"])
 
 let configuration = await MUDKitConfigurator.setup(
     pulseConfiguration: PulseConfiguration(
@@ -51,46 +39,67 @@ let configuration = await MUDKitConfigurator.setup(
         delegateQueue: OperationQueue()
     ),
     featureToggleConfiguration: FeatureToggleConfiguration(featureToggles: [
-        FeatureToggle(name: "newFeature", convenientName: "Новая фича", isEnabled: false)
+        FeatureToggle(name: "newFeature", convenientName: "New Feature", isEnabled: false)
     ]),
     deeplinkConfiguration: DeeplinkConfiguration { url in
-        print("Получен диплинк: \(url)")
+        print("Received deeplink: \(url)")
     },
     environmentConfiguration: EnvironmentConfiguration(
-        environments: [
-            Environment(name: "dev", parameters: ["api": "https://dev.api.com"]),
-            Environment(name: "prod", parameters: ["api": "https://prod.api.com"])
-        ],
-        defaultEnvironmentName: "dev"
+        environments: [devEnvironment, prodEnvironment],
+        defaultEnvironmentId: devEnvironment.id
     )
 )
 ```
 
-### Проверка фича-тогглов
+### Checking Feature Toggles
 
-Проверьте, включена ли определённая функция:
+Verify if a specific feature is enabled:
 
 ```swift
 if MUDKitService.isFeatureToggleOn(name: "newFeature") {
-    print("Новая функция включена")
+    print("New feature is enabled")
 } else {
-    print("Новая функция отключена")
+    print("New feature is disabled")
 }
 ```
 
-### Логирование
+### Logging
 
-Используйте `Log` для записи сообщений с разными уровнями:
+Use `Log` to log messages with different levels:
 
 ```swift
 let logger = Log(subsystem: "com.yourapp", category: "network")
-logger.info(logEntry: .text("Запрос начат"))
-logger.error(logEntry: .detailed(text: "Запрос завершился с ошибкой", parameters: ["code": 404]))
+logger.info(logEntry: .text("Request started"))
+logger.error(logEntry: .detailed(text: "Request failed", parameters: ["code": 404]))
 ```
 
-### Работа с UI для отладки
+### Debugging Frame Geometry
 
-Добавьте `MUDKitView` в ваше приложение для доступа к инструментам отладки:
+Apply the `frameGeometry` modifier to a SwiftUI view to debug its frame. Enable it via UserDefaults and customize the border color:
+
+```swift
+import SwiftUI
+import MUDKit
+
+struct ContentView: View {
+    var body: some View {
+        VStack {
+            Text("Debug Me")
+                .frame(width: 100, height: 50)
+                .frameGeometry(.blue) // Adds a blue dashed border and size info
+        }
+        .onAppear {
+            UserDefaultsService.set(value: true, for: Key.frameGeometry.rawValue)
+        }
+    }
+}
+```
+
+The `frameGeometry` modifier displays a dashed border and text with the view's size and safe area insets when enabled.
+
+### Using the Debug UI
+
+Add `MUDKitView` to your app to access debugging tools:
 
 ```swift
 import SwiftUI
@@ -102,12 +111,3 @@ struct ContentView: View {
     }
 }
 ```
-
-`MUDKitView` предоставляет доступ к следующим инструментам:
-- **Pulse**: Просмотр сетевых логов.
-- **Feature Toggles**: Управление фича-тогглами.
-- **UserDefaults**: Просмотр и удаление данных UserDefaults.
-- **Keychain**: Управление данными в Keychain.
-- **Deeplink**: Тестирование диплинков.
-- **Environments**: Переключение окружений.
-- **File System**: Просмотр и удаление файлов.

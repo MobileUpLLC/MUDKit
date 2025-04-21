@@ -6,7 +6,7 @@ public struct DeeplinkConfiguration: Sendable {
     let deeplinkHandler: @Sendable (URL) -> Void
     
     /// Initializes the deeplink configuration with a handler closure.
-        /// - Parameter deeplinkHandler: A closure that processes a deeplink URL.
+    /// - Parameter deeplinkHandler: A closure that processes a deeplink URL.
     public init(deeplinkHandler: @Sendable @escaping (URL) -> Void) {
         self.deeplinkHandler = deeplinkHandler
     }

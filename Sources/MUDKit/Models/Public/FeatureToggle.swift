@@ -7,7 +7,7 @@ public struct FeatureToggle: Hashable, Codable, Sendable {
     /// Whether the feature is enabled.
     var isEnabled: Bool
     
-    /// Initializes a feature toggle with a name and enabled state.
+    /// Initializes a feature toggle.
         /// - Parameters:
         ///   - name: The unique identifier for the toggle.
         ///   - convenientName: A user-friendly name for the toggle.

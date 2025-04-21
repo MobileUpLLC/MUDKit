@@ -9,10 +9,10 @@ public struct EnvironmentConfiguration: Sendable {
     /// The currently selected environment, if any.
     let selectedEnvironment: Environment?
     
-    /// Initializes the environment configuration with a list of environments and a default one.
-        /// - Parameters:
-        ///   - environments: An array of `Environment` objects representing available environments.
-        ///   - defaultEnvironmentId: The id of the default environment to use if none was selected.
+    /// Initializes the environment configuration.
+    /// - Parameters:
+    ///   - environments: An array of `Environment` objects representing available environments.
+    ///   - defaultEnvironmentId: The id of the default environment to use if none was selected.
     public init(
         environments: [Environment],
         defaultEnvironmentId: UUID

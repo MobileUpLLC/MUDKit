@@ -16,7 +16,7 @@ public struct Log: Sendable {
     private let category: String
     private let isLoggingNeeded: Bool
     
-    /// Initializes a logger with subsystem, category, and logging toggle.
+    /// Initializes a logger.
         /// - Parameters:
         ///   - subsystem: The subsystem identifier (e.g., app bundle ID).
         ///   - category: The category for organizing logs.
