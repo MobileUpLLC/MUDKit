@@ -1,6 +1,6 @@
 import Foundation
 
-public struct FileSystemService {
+actor FileSystemService {
     enum DirectoryType: String {
         case documents
         case temporary
@@ -23,7 +23,11 @@ public struct FileSystemService {
         }
     }
     
-    private static let fileSystem = FileSystem()
+    private static var temporaryDirectory: URL {
+        fileManager.temporaryDirectory
+    }
+    
+    private static let fileManager = FileManager.default
     
     static func loadDirectory(_ type: DirectoryType) async throws -> (directory: URL, files: [URL]) {
         let directoryURL: URL
@@ -31,14 +35,14 @@ public struct FileSystemService {
         do {
             switch type {
             case .documents:
-                directoryURL = try await fileSystem.url(
+                directoryURL = try await url(
                     for: .documentDirectory,
                     in: .userDomainMask,
                     appropriateFor: nil,
                     create: false
                 )
             case .temporary:
-                directoryURL = await fileSystem.temporaryDirectory
+                directoryURL = temporaryDirectory
             }
         } catch {
             Log.fileSystemService.error(
@@ -58,7 +62,7 @@ public struct FileSystemService {
     
     static func loadSpecificDirectory(_ directoryURL: URL) async throws -> [URL] {
         do {
-            let directoryContents = try await fileSystem.contentsOfDirectory(
+            let directoryContents = try contentsOfDirectory(
                 at: directoryURL,
                 includingPropertiesForKeys: [.isDirectoryKey, .fileSizeKey, .creationDateKey],
                 options: [.skipsHiddenFiles]
@@ -76,7 +80,7 @@ public struct FileSystemService {
     
     static func deleteFile(at url: URL, currentDirectory: URL?) async throws -> [URL] {
         do {
-            try await fileSystem.removeItem(at: url)
+            try removeItem(at: url)
         } catch {
             Log.fileSystemService.error(
                 logEntry: .text(FileSystemServiceError.deleteFileError.message + ": \(url)")
@@ -102,5 +106,26 @@ public struct FileSystemService {
     
     static func getIsDirectory(for url: URL) -> Bool {
         return (try? url.resourceValues(forKeys: [.isDirectoryKey]).isDirectory) ?? false
+    }
+    
+    private static func url(
+        for directory: FileManager.SearchPathDirectory,
+        in domain: FileManager.SearchPathDomainMask,
+        appropriateFor url: URL?,
+        create: Bool
+    ) throws -> URL {
+        try fileManager.url(for: directory, in: domain, appropriateFor: url, create: create)
+    }
+    
+    private static func contentsOfDirectory(
+        at url: URL,
+        includingPropertiesForKeys keys: [URLResourceKey]?,
+        options: FileManager.DirectoryEnumerationOptions
+    ) throws -> [URL] {
+        try fileManager.contentsOfDirectory(at: url, includingPropertiesForKeys: keys, options: options)
+    }
+    
+    private static func removeItem(at url: URL) throws {
+        try fileManager.removeItem(at: url)
     }
 }
