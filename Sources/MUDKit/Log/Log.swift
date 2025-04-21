@@ -2,9 +2,13 @@ import Foundation
 import os
 import Pulse
 
+/// A logging utility with support for different log levels and Pulse integration.
 public struct Log: Sendable {
+    /// Enum representing log entry types.
     public enum LogEntry {
+        /// A simple text-based log entry.
         case text(String)
+        /// A detailed log entry with text and JSON-serializable parameters.
         case detailed(text: String, parameters: [AnyHashable: Any])
     }
     
@@ -12,28 +16,43 @@ public struct Log: Sendable {
     private let category: String
     private let isLoggingNeeded: Bool
     
+    /// Initializes a logger with subsystem, category, and logging toggle.
+        /// - Parameters:
+        ///   - subsystem: The subsystem identifier (e.g., app bundle ID).
+        ///   - category: The category for organizing logs.
+        ///   - isLoggingNeeded: Whether logging is enabled. Defaults to `true`.
     public init(subsystem: String, category: String, isLoggingNeeded: Bool = true) {
         self.logger = Logger(subsystem: subsystem, category: category)
         self.category = category
         self.isLoggingNeeded = isLoggingNeeded
     }
     
+    /// Logs a debug-level message.
+        /// - Parameter logEntry: The log entry to record.
     public func debug(logEntry: LogEntry) {
         log(level: .debug, logEntry: logEntry)
     }
     
+    /// Logs an info-level message.
+        /// - Parameter logEntry: The log entry to record.
     public func info(logEntry: LogEntry) {
         log(level: .info, logEntry: logEntry)
     }
     
+    /// Logs a default-level message.
+        /// - Parameter logEntry: The log entry to record.
     public func `default`(logEntry: LogEntry) {
         log(level: .default, logEntry: logEntry)
     }
     
+    /// Logs an error-level message.
+        /// - Parameter logEntry: The log entry to record.
     public func error(logEntry: LogEntry) {
         log(level: .error, logEntry: logEntry)
     }
     
+    /// Logs a fault-level message.
+        /// - Parameter logEntry: The log entry to record.
     public func fault(logEntry: LogEntry) {
         log(level: .fault, logEntry: logEntry)
     }
