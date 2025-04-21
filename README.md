@@ -75,7 +75,7 @@ logger.error(logEntry: .detailed(text: "Request failed", parameters: ["code": 40
 
 ### Debugging Frame Geometry
 
-Apply the `frameGeometry` modifier to a SwiftUI view to debug its frame. Enable it via UserDefaults and customize the border color:
+Apply the `frameGeometry` modifier to a SwiftUI view to debug its frame. Customize the border color and enable it via toggle in MUDKitView:
 
 ```swift
 import SwiftUI
@@ -87,9 +87,6 @@ struct ContentView: View {
             Text("Debug Me")
                 .frame(width: 100, height: 50)
                 .frameGeometry(.blue) // Adds a blue dashed border and size info
-        }
-        .onAppear {
-            UserDefaultsService.set(value: true, for: Key.frameGeometry.rawValue)
         }
     }
 }

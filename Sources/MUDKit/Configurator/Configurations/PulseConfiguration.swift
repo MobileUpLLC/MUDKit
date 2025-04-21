@@ -8,11 +8,6 @@ public struct PulseConfiguration {
     private let sessionDelegate: SessionDelegate
     private let delegateQueue: OperationQueue
     
-    /// Initializes the Pulse configuration with URL session settings.
-    /// - Parameters:
-    ///   - configuration: The URL session configuration to use.
-    ///   - sessionDelegate: The session delegate for handling session events.
-    ///   - delegateQueue: The operation queue for delegate callbacks.
     public init(
         configuration: URLSessionConfiguration,
         sessionDelegate: SessionDelegate,

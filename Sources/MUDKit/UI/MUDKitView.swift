@@ -46,11 +46,6 @@ public struct MUDKitView<Content: View>: View {
         }
     }
     
-    /// Initializes the MUDKit debug view with optional custom content.
-    /// - Parameters:
-    ///   - pulseStore: The Pulse logger store for network logging. Defaults to `.shared`.
-    ///   - pulseMode: The mode for Pulse console display. Defaults to `.all`.
-    ///   - content: A view builder for custom content to include in the debug interface. Defaults to `EmptyView`.
     public init(
         pulseStore: LoggerStore = .shared,
         pulseMode: ConsoleMode = .all,

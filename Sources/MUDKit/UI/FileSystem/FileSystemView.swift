@@ -12,19 +12,17 @@ struct FileSystemView: View {
     @State private var errorMessage = ""
     @State private var isErrorShown = false
     
+    private let fileSystemService = FileSystemService()
+    
     var body: some View {
         VStack {
             HStack {
                 Group {
                     Button(FileSystemService.DirectoryType.documents.rawValue.capitalized) {
-                        Task {
-                            await loadDirectory(type: .documents)
-                        }
+                        loadDirectory(type: .documents)
                     }
                     Button(FileSystemService.DirectoryType.temporary.rawValue.capitalized) {
-                        Task {
-                            await loadDirectory(type: .temporary)
-                        }
+                        loadDirectory(type: .temporary)
                     }
                 }
                 .buttonStyle(.borderedProminent)
@@ -43,9 +41,7 @@ struct FileSystemView: View {
                     currentDirectory != FileManager.default.temporaryDirectory
                 {
                     Button {
-                        Task {
-                            await loadSpecificDirectory(currentDirectory.deletingLastPathComponent())
-                        }
+                        loadSpecificDirectory(currentDirectory.deletingLastPathComponent())
                     } label: {
                         Image(systemName: "chevron.left")
                     }
@@ -53,28 +49,24 @@ struct FileSystemView: View {
                 ForEach(files, id: \.self) { url in
                     HStack {
                         Button {
-                            if FileSystemService.getIsDirectory(for: url) {
-                                Task {
-                                    await loadSpecificDirectory(url)
-                                }
+                            if fileSystemService.getIsDirectory(for: url) {
+                                loadSpecificDirectory(url)
                             } else {
                                 selectedFile = IdentifiableURL(url: url)
                             }
                         } label: {
                             VStack(alignment: .leading, spacing: 4) {
                                 HStack {
-                                    Image(systemName: FileSystemService.getIsDirectory(for: url) ? "folder" : "doc")
+                                    Image(systemName: fileSystemService.getIsDirectory(for: url) ? "folder" : "doc")
                                     Text(url.lastPathComponent)
                                 }
                             }
                         }
                         .buttonStyle(.plain)
                         Spacer()
-                        if FileSystemService.getIsDirectory(for: url) == false {
+                        if fileSystemService.getIsDirectory(for: url) == false {
                             Button("Delete") {
-                                Task {
-                                    await deleteFile(at: url)
-                                }
+                                deleteFile(at: url)
                             }
                             .foregroundColor(.red)
                         }
@@ -91,9 +83,9 @@ struct FileSystemView: View {
         }
     }
     
-    private func loadDirectory(type: FileSystemService.DirectoryType) async {
+    private func loadDirectory(type: FileSystemService.DirectoryType) {
         do {
-            let (directory, files) = try await FileSystemService.loadDirectory(type)
+            let (directory, files) = try fileSystemService.loadDirectory(type)
             currentDirectory = directory
             self.files = files
         } catch {
@@ -101,18 +93,18 @@ struct FileSystemView: View {
         }
     }
     
-    private func loadSpecificDirectory(_ directoryURL: URL) async {
+    private func loadSpecificDirectory(_ directoryURL: URL) {
         do {
-            files = try await FileSystemService.loadSpecificDirectory(directoryURL)
+            files = try fileSystemService.loadSpecificDirectory(directoryURL)
             currentDirectory = directoryURL
         } catch {
             showErrorMessage(error)
         }
     }
     
-    private func deleteFile(at url: URL) async {
+    private func deleteFile(at url: URL) {
         do {
-            files = try await FileSystemService.deleteFile(at: url, currentDirectory: currentDirectory)
+            files = try fileSystemService.deleteFile(at: url, currentDirectory: currentDirectory)
         } catch {
             showErrorMessage(error)
         }

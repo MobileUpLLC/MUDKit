@@ -1,19 +1,11 @@
 import Foundation
 
-/// Represents an environment configuration with id, name and parameters.
+/// Represents an environment configuration.
 public struct Environment: Codable, Hashable, Identifiable, Sendable {
-    /// The UUID of the environment.
     public let id: UUID
-    /// The name of the environment (e.g., "dev", "prod").
     let name: String
-    /// A dictionary of environment-specific parameters.
     let parameters: [String: String]
     
-    /// Initializes an environment.
-        /// - Parameters:
-        ///   - id: The UUID of the environment.
-        ///   - name: The name of the environment.
-        ///   - parameters: A dictionary of key-value pairs for environment settings.
     public init(id: UUID, name: String, parameters: [String: String]) {
         self.id = id
         self.name = name
