@@ -1,6 +1,6 @@
 import Foundation
 
-actor FileSystemService {
+final class FileSystemService {
     enum DirectoryType: String {
         case documents
         case temporary
@@ -23,13 +23,9 @@ actor FileSystemService {
         }
     }
     
-    private static var temporaryDirectory: URL {
-        fileManager.temporaryDirectory
-    }
+    private let fileManager = FileManager.default
     
-    private static let fileManager = FileManager.default
-    
-    static func loadDirectory(_ type: DirectoryType) async throws -> (directory: URL, files: [URL]) {
+    func loadDirectory(_ type: DirectoryType) throws -> (directory: URL, files: [URL]) {
         let directoryURL: URL
         
         do {
@@ -42,7 +38,7 @@ actor FileSystemService {
                     create: false
                 )
             case .temporary:
-                directoryURL = temporaryDirectory
+                directoryURL = fileManager.temporaryDirectory
             }
         } catch {
             Log.fileSystemService.error(
@@ -52,7 +48,7 @@ actor FileSystemService {
         }
         
         do {
-            let directoryContents = try await loadSpecificDirectory(directoryURL)
+            let directoryContents = try loadSpecificDirectory(directoryURL)
             
             return (directory: directoryURL, files: directoryContents)
         } catch {
@@ -60,7 +56,7 @@ actor FileSystemService {
         }
     }
     
-    static func loadSpecificDirectory(_ directoryURL: URL) async throws -> [URL] {
+    func loadSpecificDirectory(_ directoryURL: URL) throws -> [URL] {
         do {
             let directoryContents = try contentsOfDirectory(
                 at: directoryURL,
@@ -78,7 +74,7 @@ actor FileSystemService {
         }
     }
     
-    static func deleteFile(at url: URL, currentDirectory: URL?) async throws -> [URL] {
+    func deleteFile(at url: URL, currentDirectory: URL?) throws -> [URL] {
         do {
             try removeItem(at: url)
         } catch {
@@ -98,17 +94,17 @@ actor FileSystemService {
         }
         
         do {
-            return try await loadSpecificDirectory(currentDirectory)
+            return try loadSpecificDirectory(currentDirectory)
         } catch {
             throw error
         }
     }
     
-    static func getIsDirectory(for url: URL) -> Bool {
+    func getIsDirectory(for url: URL) -> Bool {
         return (try? url.resourceValues(forKeys: [.isDirectoryKey]).isDirectory) ?? false
     }
     
-    private static func url(
+    private func url(
         for directory: FileManager.SearchPathDirectory,
         in domain: FileManager.SearchPathDomainMask,
         appropriateFor url: URL?,
@@ -117,7 +113,7 @@ actor FileSystemService {
         try fileManager.url(for: directory, in: domain, appropriateFor: url, create: create)
     }
     
-    private static func contentsOfDirectory(
+    private func contentsOfDirectory(
         at url: URL,
         includingPropertiesForKeys keys: [URLResourceKey]?,
         options: FileManager.DirectoryEnumerationOptions
@@ -125,7 +121,7 @@ actor FileSystemService {
         try fileManager.contentsOfDirectory(at: url, includingPropertiesForKeys: keys, options: options)
     }
     
-    private static func removeItem(at url: URL) throws {
+    private func removeItem(at url: URL) throws {
         try fileManager.removeItem(at: url)
     }
 }
