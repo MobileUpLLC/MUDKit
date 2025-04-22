@@ -16,8 +16,8 @@
 ## Requirements
 
 - iOS 15.0 or later
-- Xcode 13.0 or later
-- Swift 5.5 or later
+- Xcode 16.0 or later
+- Swift 6.0 or later
 - Dependencies: Pulse, Alamofire, KeychainSwift
 
 ## Usage
