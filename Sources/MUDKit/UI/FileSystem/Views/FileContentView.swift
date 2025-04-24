@@ -30,8 +30,6 @@ struct FileContentView: View {
                 || (contentType?.conforms(to: .xml) ?? false)
             {
                 WebView(url: fileURL)
-            } else if contentType?.conforms(to: .audio) ?? false {
-                AudioPlayerView(url: fileURL)
             } else {
                 if let content = try? String(contentsOf: fileURL, encoding: .utf8) {
                     ScrollView {
