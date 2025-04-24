@@ -11,7 +11,9 @@ struct FileSystemView: View {
     @State private var currentDirectoryUrl: URL?
     @State private var selectedFile: IdentifiableURL?
     @State private var errorMessage = ""
+    @State private var fileUrlToShare: URL?
     @State private var isErrorShown = false
+    @State private var isShareSheetPresented = false
     
     private let fileSystemService = FileSystemService()
     
@@ -45,27 +47,33 @@ struct FileSystemView: View {
                 }
                 ForEach(files, id: \.self) { url in
                     HStack {
-                        Button {
-                            if isDirectory(url) {
-                                loadDirectory(type: .specific(url: url))
-                            } else {
-                                selectedFile = IdentifiableURL(url: url)
+                        VStack(alignment: .leading, spacing: 4) {
+                            HStack {
+                                Image(systemName: isDirectory(url) ? "folder" : "doc")
+                                Text(url.lastPathComponent)
                             }
-                        } label: {
-                            VStack(alignment: .leading, spacing: 4) {
-                                HStack {
-                                    Image(systemName: isDirectory(url) ? "folder" : "doc")
-                                    Text(url.lastPathComponent)
+                            .onTapGesture {
+                                if isDirectory(url) {
+                                    loadDirectory(type: .specific(url: url))
+                                } else {
+                                    selectedFile = IdentifiableURL(url: url)
                                 }
                             }
                         }
-                        .buttonStyle(.plain)
-                        Spacer()
+                        Spacer(minLength: 20)
                         if isDirectory(url) == false {
-                            Button("Delete") {
-                                deleteFile(at: url)
+                            HStack(spacing: 20) {
+                                Image(systemName: "square.and.arrow.up")
+                                    .onTapGesture {
+                                        fileUrlToShare = url
+                                        isShareSheetPresented = true
+                                    }
+                                Text("Delete")
+                                    .foregroundColor(.red)
+                                    .onTapGesture {
+                                        deleteFile(at: url)
+                                    }
                             }
-                            .foregroundColor(.red)
                         }
                     }
                 }
@@ -77,6 +85,11 @@ struct FileSystemView: View {
         }
         .alert(isPresented: $isErrorShown) {
             Alert(title: Text("Error"), message: Text(errorMessage), dismissButton: .default(Text("OK")))
+        }
+        .sheet(isPresented: $isShareSheetPresented) {
+            if let fileUrlToShare {
+                ShareSheetView(activityItems: [fileUrlToShare])
+            }
         }
     }
     
