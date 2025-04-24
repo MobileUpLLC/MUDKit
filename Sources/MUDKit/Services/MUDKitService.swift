@@ -10,4 +10,10 @@ public struct MUDKitService {
             .featureToggles
             .contains { $0.isEnabled && $0.name == name } ?? false
     }
+    
+    /// Creates sample files in Documents and Temporary directories to test FileSystemService features.
+    public static func createSampleFilesForFileSystemServiceDemo() {
+        let fileSystemService = FileSystemService()
+        fileSystemService.createSampleFiles()
+    }
 }
