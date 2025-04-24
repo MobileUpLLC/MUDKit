@@ -5,8 +5,8 @@ struct FrameGeometryView: View {
     
     var body: some View {
         Toggle("Frame geometry", isOn: $isEnabled)
-            .onChange(of: isEnabled) { newValue in
-                UserDefaultsService.set(value: newValue, for: Key.frameGeometry.rawValue)
+            .onChange(of: isEnabled) {
+                UserDefaultsService.set(value: isEnabled, for: Key.frameGeometry.rawValue)
             }
     }
 }
