@@ -7,10 +7,14 @@ struct FileSystemView: View {
     }
     
     @State private var files: [URL] = []
-    @State private var currentDirectoryUrl: URL?
+    @State private var currentDirectoryUrl: URL? { didSet { updateIsRootDirectory() } }
     @State private var selectedFile: IdentifiableURL?
     @State private var errorMessage = ""
     @State private var isErrorShown = false
+    @State private var isRootDirectory = true
+    
+    private let documentsDirectoryUrl: URL?
+    private let temporaryDirectoryUrl: URL?
     
     private let fileSystemService = FileSystemService()
     
@@ -35,10 +39,12 @@ struct FileSystemView: View {
                     .padding()
             }
             List {
-                Button {
-                    loadPreviousDirectory()
-                } label: {
-                    Image(systemName: "chevron.left")
+                if isRootDirectory == false {
+                    Button {
+                        loadPreviousDirectory()
+                    } label: {
+                        Image(systemName: "chevron.left")
+                    }
                 }
                 ForEach(files, id: \.self) { url in
                     HStack {
@@ -78,6 +84,19 @@ struct FileSystemView: View {
         .alert(isPresented: $isErrorShown) {
             Alert(title: Text("Error"), message: Text(errorMessage), dismissButton: .default(Text("OK")))
         }
+    }
+    
+    init() {
+        documentsDirectoryUrl = fileSystemService.constructPath(
+            directory: .documents,
+            fileName: nil,
+            fileExtension: nil
+        )
+        temporaryDirectoryUrl = fileSystemService.constructPath(
+            directory: .temporary,
+            fileName: nil,
+            fileExtension: nil
+        )
     }
     
     private func isDirectory(_ url: URL) -> Bool {
@@ -135,6 +154,14 @@ struct FileSystemView: View {
             files = content
         } else {
             showErrorMessage("Невозможно удалить файл")
+        }
+    }
+    
+    private func updateIsRootDirectory() {
+        if currentDirectoryUrl == documentsDirectoryUrl || currentDirectoryUrl == temporaryDirectoryUrl {
+            isRootDirectory = true
+        } else {
+            isRootDirectory = false
         }
     }
     
