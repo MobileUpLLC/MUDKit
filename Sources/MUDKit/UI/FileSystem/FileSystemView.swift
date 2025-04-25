@@ -7,13 +7,16 @@ struct FileSystemView: View {
     }
     
     @State private var files: [URL] = []
-    @State private var currentDirectory: FileSystemServiceDirectoryType?
-    @State private var currentDirectoryUrl: URL?
+    @State private var currentDirectoryUrl: URL? { didSet { updateIsRootDirectory() } }
     @State private var selectedFile: IdentifiableURL?
     @State private var errorMessage = ""
     @State private var fileUrlToShare: URL?
     @State private var isErrorShown = false
     @State private var isShareSheetPresented = false
+    @State private var isRootDirectory = true
+    
+    private let documentsDirectoryUrl: URL?
+    private let temporaryDirectoryUrl: URL?
     
     private let fileSystemService = FileSystemService()
     
@@ -21,11 +24,11 @@ struct FileSystemView: View {
         VStack {
             HStack {
                 Group {
-                    Button(FileSystemServiceDirectoryType.documents.name) {
-                        loadDirectory(type: .documents)
+                    Button("Documents") {
+                        loadDirectory(directory: .documents)
                     }
-                    Button(FileSystemServiceDirectoryType.temporary.name) {
-                        loadDirectory(type: .temporary)
+                    Button("Temporary") {
+                        loadDirectory(directory: .temporary)
                     }
                 }
                 .buttonStyle(.borderedProminent)
@@ -38,9 +41,9 @@ struct FileSystemView: View {
                     .padding()
             }
             List {
-                if case let .specific(url) = currentDirectory {
+                if isRootDirectory == false {
                     Button {
-                        loadDirectory(type: .specific(url: url.deletingLastPathComponent()))
+                        loadPreviousDirectory()
                     } label: {
                         Image(systemName: "chevron.left")
                     }
@@ -54,7 +57,7 @@ struct FileSystemView: View {
                             }
                             .onTapGesture {
                                 if isDirectory(url) {
-                                    loadDirectory(type: .specific(url: url))
+                                    loadContentOfUrl(url: url)
                                 } else {
                                     selectedFile = IdentifiableURL(url: url)
                                 }
@@ -80,6 +83,9 @@ struct FileSystemView: View {
             }
         }
         .navigationTitle("File System")
+        .onAppear {
+            loadDirectory(directory: .documents)
+        }
         .sheet(item: $selectedFile) { identifiableURL in
             FileViewer(fileURL: identifiableURL.url)
         }
@@ -93,45 +99,87 @@ struct FileSystemView: View {
         }
     }
     
+    init() {
+        documentsDirectoryUrl = fileSystemService.constructPath(
+            directory: .documents,
+            fileName: nil,
+            fileExtension: nil
+        )
+        temporaryDirectoryUrl = fileSystemService.constructPath(
+            directory: .temporary,
+            fileName: nil,
+            fileExtension: nil
+        )
+    }
+    
     private func isDirectory(_ url: URL) -> Bool {
         (try? url.resourceValues(forKeys: [.isDirectoryKey]).isDirectory) ?? false
     }
     
-    private func loadDirectory(type: FileSystemServiceDirectoryType) {
-        do {
-            let (directoryType, directoryUrl, files) = try fileSystemService.loadDirectory(type)
-            self.currentDirectory = directoryType
-            self.currentDirectoryUrl = directoryUrl
-            self.files = files
-        } catch {
-            showErrorMessage(error)
+    private func loadDirectory(
+        directory: FileSystemServiceDirectoryType,
+        fileName: String? = nil,
+        fileExtension: String? = nil
+    ) {
+        guard
+            let directoryUrl = fileSystemService.constructPath(directory: directory, fileName: nil, fileExtension: nil),
+            let content = fileSystemService.getContentOfUrl(directoryUrl)
+        else {
+            return showErrorMessage("Невозможно загрузить директорию \(directory)")
         }
+
+        currentDirectoryUrl = directoryUrl
+        files = content
+    }
+    
+    private func loadContentOfUrl(url: URL) {
+        guard let content = fileSystemService.getContentOfUrl(url)
+                
+        else {
+            return showErrorMessage("Невозможно загрузить директорию \(url.absoluteString)")
+        }
+
+        currentDirectoryUrl = url
+        files = content
+    }
+    
+    private func loadPreviousDirectory() {
+        guard
+            let previousDirectoryUrl = currentDirectoryUrl?.deletingLastPathComponent(),
+            let content = fileSystemService.getContentOfUrl(previousDirectoryUrl)
+        else {
+            return showErrorMessage("Невозможно загрузить предыдущую директорию")
+        }
+        
+        currentDirectoryUrl = previousDirectoryUrl
+        files = content
     }
     
     private func deleteFile(at url: URL) {
-        guard let currentDirectory else {
-            return
-        }
-        
         if fileSystemService.deleteFile(at: url) {
-            do {
-                let (_, _, files) = try fileSystemService.loadDirectory(currentDirectory)
-                self.files = files
-            } catch {
-                showErrorMessage(error)
+            guard
+                let currentDirectoryUrl,
+                let content = fileSystemService.getContentOfUrl(currentDirectoryUrl)
+            else {
+                return showErrorMessage("Невозможно обновить директорию")
             }
+            
+            files = content
         } else {
-            showErrorMessage(FileSystemServiceError.deleteFileError)
+            showErrorMessage("Невозможно удалить файл")
         }
     }
     
-    private func showErrorMessage(_ error: Error) {
-        if let fileSystemServiceError = error as? FileSystemServiceError {
-            errorMessage = fileSystemServiceError.message
+    private func updateIsRootDirectory() {
+        if currentDirectoryUrl == documentsDirectoryUrl || currentDirectoryUrl == temporaryDirectoryUrl {
+            isRootDirectory = true
         } else {
-            errorMessage = error.localizedDescription
+            isRootDirectory = false
         }
-        
+    }
+    
+    private func showErrorMessage(_ message: String) {
+        errorMessage = message
         isErrorShown = true
     }
 }
