@@ -1,6 +1,24 @@
 import Foundation
 
 final class FileSystemService {
+    func constructPath(
+        directory: FileSystemServiceDirectoryType,
+        fileName: String?,
+        fileExtension: String?
+    ) -> URL? {
+        guard var url = constructDirectoryPath(directory) else {
+            return nil
+        }
+
+        if let fileName {
+            url = url.appendingPathComponent(fileName)
+        } else if let fileExtension {
+            url = url.appendingPathExtension(fileExtension)
+        }
+
+        return url
+    }
+    
     func getContentOfUrl(_ url: URL) -> [URL]? {
         var isDirectory: ObjCBool = false
 
@@ -14,25 +32,6 @@ final class FileSystemService {
         return try? FileManager.default.contentsOfDirectory(at: url, includingPropertiesForKeys: [])
     }
 
-    func constructPath(
-        fileDirectory: FileSystemServiceDirectoryType,
-        fileName: String?,
-        fileExtension: String?
-    ) -> URL? {
-        guard var url = constructDirectoryPath(fileDirectory) else {
-            return nil
-        }
-
-        if let fileName {
-            url = url.appendingPathComponent(fileName)
-        }
-
-        if let fileExtension {
-            url = url.appendingPathExtension(fileExtension)
-        }
-
-        return url
-    }
 
     private func constructDirectoryPath(_ directory: FileSystemServiceDirectoryType) -> URL? {
         switch directory {

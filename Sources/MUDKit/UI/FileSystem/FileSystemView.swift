@@ -7,7 +7,6 @@ struct FileSystemView: View {
     }
     
     @State private var files: [URL] = []
-//    @State private var currentDirectory: FileSystemServiceDirectoryType?
     @State private var currentDirectoryUrl: URL?
     @State private var selectedFile: IdentifiableURL?
     @State private var errorMessage = ""
@@ -20,10 +19,10 @@ struct FileSystemView: View {
             HStack {
                 Group {
                     Button("Documents") {
-                        loadDirectory(type: .documents)
+                        loadDirectory(directory: .documents)
                     }
                     Button("Temporary") {
-                        loadDirectory(type: .temporary)
+                        loadDirectory(directory: .temporary)
                     }
                 }
                 .buttonStyle(.borderedProminent)
@@ -35,43 +34,44 @@ struct FileSystemView: View {
                     .foregroundColor(.gray)
                     .padding()
             }
-//            List {
-//                if case let .specific(url) = currentDirectory {
-//                    Button {
-//                        loadDirectory(type: .specific(url: url.deletingLastPathComponent()))
-//                    } label: {
-//                        Image(systemName: "chevron.left")
-//                    }
-//                }
-//                ForEach(files, id: \.self) { url in
-//                    HStack {
-//                        Button {
-//                            if isDirectory(url) {
-//                                loadDirectory(type: .specific(url: url))
-//                            } else {
-//                                selectedFile = IdentifiableURL(url: url)
-//                            }
-//                        } label: {
-//                            VStack(alignment: .leading, spacing: 4) {
-//                                HStack {
-//                                    Image(systemName: isDirectory(url) ? "folder" : "doc")
-//                                    Text(url.lastPathComponent)
-//                                }
-//                            }
-//                        }
-//                        .buttonStyle(.plain)
-//                        Spacer()
-//                        if isDirectory(url) == false {
-//                            Button("Delete") {
-//                                deleteFile(at: url)
-//                            }
-//                            .foregroundColor(.red)
-//                        }
-//                    }
-//                }
-//            }
+            List {
+                Button {
+                    loadPreviousDirectory()
+                } label: {
+                    Image(systemName: "chevron.left")
+                }
+                ForEach(files, id: \.self) { url in
+                    HStack {
+                        Button {
+                            if isDirectory(url) {
+                                loadContentOfUrl(url: url)
+                            } else {
+                                selectedFile = IdentifiableURL(url: url)
+                            }
+                        } label: {
+                            VStack(alignment: .leading, spacing: 4) {
+                                HStack {
+                                    Image(systemName: isDirectory(url) ? "folder" : "doc")
+                                    Text(url.lastPathComponent)
+                                }
+                            }
+                        }
+                        .buttonStyle(.plain)
+                        Spacer()
+                        if isDirectory(url) == false {
+                            Button("Delete") {
+                                deleteFile(at: url)
+                            }
+                            .foregroundColor(.red)
+                        }
+                    }
+                }
+            }
         }
         .navigationTitle("File System")
+        .onAppear {
+            loadDirectory(directory: .documents)
+        }
         .sheet(item: $selectedFile) { identifiableURL in
             FileViewer(fileURL: identifiableURL.url)
         }
@@ -84,34 +84,59 @@ struct FileSystemView: View {
         (try? url.resourceValues(forKeys: [.isDirectoryKey]).isDirectory) ?? false
     }
     
-    private func loadDirectory(type: FileSystemServiceDirectoryType) {
+    private func loadDirectory(
+        directory: FileSystemServiceDirectoryType,
+        fileName: String? = nil,
+        fileExtension: String? = nil
+    ) {
         guard
-            let directoryUrl = fileSystemService.constructPath(fileDirectory: type, fileName: nil, fileExtension: nil),
+            let directoryUrl = fileSystemService.constructPath(directory: directory, fileName: nil, fileExtension: nil),
             let content = fileSystemService.getContentOfUrl(directoryUrl)
         else {
-            return showErrorMessage("Невозможно загрузить директорию \(type)")
+            return showErrorMessage("Невозможно загрузить директорию \(directory)")
         }
 
         currentDirectoryUrl = directoryUrl
         files = content
     }
     
-//    private func deleteFile(at url: URL) {
-//        guard let currentDirectory else {
-//            return
-//        }
-//        
-//        if fileSystemService.deleteFile(at: url) {
-//            do {
-//                let (_, _, files) = try fileSystemService.loadDirectory(currentDirectory)
-//                self.files = files
-//            } catch {
-//                showErrorMessage(error)
-//            }
-//        } else {
-//            showErrorMessage(FileSystemServiceError.deleteFileError)
-//        }
-//    }
+    private func loadContentOfUrl(url: URL) {
+        guard let content = fileSystemService.getContentOfUrl(url)
+                
+        else {
+            return showErrorMessage("Невозможно загрузить директорию \(url.absoluteString)")
+        }
+
+        currentDirectoryUrl = url
+        files = content
+    }
+    
+    private func loadPreviousDirectory() {
+        guard
+            let previousDirectoryUrl = currentDirectoryUrl?.deletingLastPathComponent(),
+            let content = fileSystemService.getContentOfUrl(previousDirectoryUrl)
+        else {
+            return showErrorMessage("Невозможно загрузить предыдущую директорию")
+        }
+        
+        currentDirectoryUrl = previousDirectoryUrl
+        files = content
+    }
+    
+    private func deleteFile(at url: URL) {
+        if fileSystemService.deleteFile(at: url) {
+            guard
+                let currentDirectoryUrl,
+                let content = fileSystemService.getContentOfUrl(currentDirectoryUrl)
+            else {
+                return showErrorMessage("Невозможно обновить директорию")
+            }
+            
+            files = content
+        } else {
+            showErrorMessage("Невозможно удалить файл")
+        }
+    }
     
     private func showErrorMessage(_ message: String) {
         errorMessage = message
