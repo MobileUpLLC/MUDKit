@@ -1,16 +1,13 @@
 import SwiftUI
 
 struct FileSystemView: View {
-    private struct IdentifiableURL: Identifiable {
-        let id = UUID()
-        let url: URL
-    }
-    
     @State private var files: [URL] = []
     @State private var currentDirectoryUrl: URL? { didSet { updateIsRootDirectory() } }
-    @State private var selectedFile: IdentifiableURL?
+    @State private var selectedFile: URL?
     @State private var errorMessage = ""
     @State private var isErrorShown = false
+    @State private var isCopied = false
+    @State private var isFileOpened = false
     @State private var isRootDirectory = true
     
     private let documentsDirectoryUrl: URL?
@@ -33,10 +30,19 @@ struct FileSystemView: View {
                 .padding()
             }
             if let currentDirectoryUrl {
-                Text("Current directory: \(currentDirectoryUrl.absoluteString)")
-                    .font(.caption)
-                    .foregroundColor(.gray)
-                    .padding()
+                HStack(spacing: 20) {
+                    Text("Current directory: \(currentDirectoryUrl.absoluteString)")
+                        .font(.caption)
+                        .foregroundColor(.gray)
+                        .padding()
+                    Button {
+                        copyDirectoryPath()
+                    } label: {
+                        Image(systemName: isCopied ? "checkmark" : "doc.on.doc")
+                            .frame(width: 24, height: 24)
+                    }
+                    .disabled(isCopied)
+                }
             }
             List {
                 if isRootDirectory == false {
@@ -52,7 +58,8 @@ struct FileSystemView: View {
                             if isDirectory(url) {
                                 loadContentOfUrl(url: url)
                             } else {
-                                selectedFile = IdentifiableURL(url: url)
+                                selectedFile = url
+                                isFileOpened = true
                             }
                         } label: {
                             VStack(alignment: .leading, spacing: 4) {
@@ -78,8 +85,12 @@ struct FileSystemView: View {
         .onAppear {
             loadDirectory(directory: .documents)
         }
-        .sheet(item: $selectedFile) { identifiableURL in
-            FileViewer(fileURL: identifiableURL.url)
+        .sheet(isPresented: $isFileOpened) {
+            if let selectedFile {
+                FileViewer(fileURL: selectedFile)
+            } else {
+                EmptyView()
+            }
         }
         .alert(isPresented: $isErrorShown) {
             Alert(title: Text("Error"), message: Text(errorMessage), dismissButton: .default(Text("OK")))
@@ -103,20 +114,20 @@ struct FileSystemView: View {
         (try? url.resourceValues(forKeys: [.isDirectoryKey]).isDirectory) ?? false
     }
     
-    private func loadDirectory(
-        directory: FileSystemServiceDirectoryType,
-        fileName: String? = nil,
-        fileExtension: String? = nil
-    ) {
-        guard
-            let directoryUrl = fileSystemService.constructPath(directory: directory, fileName: nil, fileExtension: nil),
-            let content = fileSystemService.getContentOfUrl(directoryUrl)
-        else {
+    private func loadDirectory(directory: FileSystemServiceDirectoryType) {
+        guard let url = fileSystemService.constructPath(directory: directory, fileName: nil, fileExtension: nil) else {
             return showErrorMessage("Невозможно загрузить директорию \(directory)")
         }
-
-        currentDirectoryUrl = directoryUrl
-        files = content
+        
+        loadContentOfUrl(url: url)
+    }
+    
+    private func loadPreviousDirectory() {
+        guard let url = currentDirectoryUrl?.deletingLastPathComponent() else {
+            return showErrorMessage("Невозможно загрузить предыдущую директорию")
+        }
+        
+        loadContentOfUrl(url: url)
     }
     
     private func loadContentOfUrl(url: URL) {
@@ -127,18 +138,6 @@ struct FileSystemView: View {
         }
 
         currentDirectoryUrl = url
-        files = content
-    }
-    
-    private func loadPreviousDirectory() {
-        guard
-            let previousDirectoryUrl = currentDirectoryUrl?.deletingLastPathComponent(),
-            let content = fileSystemService.getContentOfUrl(previousDirectoryUrl)
-        else {
-            return showErrorMessage("Невозможно загрузить предыдущую директорию")
-        }
-        
-        currentDirectoryUrl = previousDirectoryUrl
         files = content
     }
     
@@ -158,10 +157,18 @@ struct FileSystemView: View {
     }
     
     private func updateIsRootDirectory() {
-        if currentDirectoryUrl == documentsDirectoryUrl || currentDirectoryUrl == temporaryDirectoryUrl {
-            isRootDirectory = true
-        } else {
-            isRootDirectory = false
+        isRootDirectory = currentDirectoryUrl == documentsDirectoryUrl || currentDirectoryUrl == temporaryDirectoryUrl
+    }
+    
+    private func copyDirectoryPath() {
+        if let currentDirectoryUrl {
+            isCopied = true
+            
+            UIPasteboard.general.string = currentDirectoryUrl.absoluteString
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                isCopied = false
+            }
         }
     }
     
