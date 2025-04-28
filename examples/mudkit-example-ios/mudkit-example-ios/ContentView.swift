@@ -5,7 +5,7 @@ struct ContentView: View {
     var body: some View {
         MUDKitView()
             .onAppear {
-                MUDKitService.createSampleFilesForFileSystemServiceDemo()
+                FileSampleService.createSampleFiles()
             }
     }
 }
