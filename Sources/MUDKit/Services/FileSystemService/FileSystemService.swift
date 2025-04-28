@@ -12,7 +12,9 @@ final class FileSystemService {
 
         if let fileName {
             url = url.appendingPathComponent(fileName)
-        } else if let fileExtension {
+        }
+        
+        if let fileExtension {
             url = url.appendingPathExtension(fileExtension)
         }
 
@@ -31,7 +33,7 @@ final class FileSystemService {
 
         return try? FileManager.default.contentsOfDirectory(at: url, includingPropertiesForKeys: [])
     }
-
+    
     func deleteFile(at url: URL) -> Bool {
         guard FileManager.default.fileExists(atPath: url.path) else {
             return true
@@ -39,15 +41,11 @@ final class FileSystemService {
 
         return (try? FileManager.default.removeItem(at: url)) != nil
     }
-
+    
     private func constructDirectoryPath(_ directory: FileSystemServiceDirectoryType) -> URL? {
         switch directory {
         case .documents:
-            guard let url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
-                return nil
-            }
-
-            return url
+            return FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
         case .temporary:
             return URL(fileURLWithPath: FileManager.default.temporaryDirectory.path, isDirectory: true)
         }

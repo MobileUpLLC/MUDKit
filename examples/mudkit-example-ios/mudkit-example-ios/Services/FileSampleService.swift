@@ -1,12 +1,17 @@
 import UIKit
 
 final class FileSampleService {
+    private enum DirectoryType {
+        case documents
+        case temporary
+    }
+    
     static func createSampleFiles() {
         createFiles(in: .documents)
         createFiles(in: .temporary)
     }
     
-    private static func createFiles(in directoryType: FileSystemServiceDirectoryType) {
+    private static func createFiles(in directoryType: DirectoryType) {
         guard let directoryUrl = constructDirectoryPath(directoryType) else {
             return
         }
@@ -59,7 +64,7 @@ final class FileSampleService {
         }
     }
     
-    private static func constructDirectoryPath(_ directory: FileSystemServiceDirectoryType) -> URL? {
+    private static func constructDirectoryPath(_ directory: DirectoryType) -> URL? {
         switch directory {
         case .documents:
             guard let url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
