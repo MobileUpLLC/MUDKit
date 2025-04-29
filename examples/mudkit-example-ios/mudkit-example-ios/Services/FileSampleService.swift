@@ -27,53 +27,58 @@ final class FileSampleService {
     
     private static func createSampleJsonFile(at url: URL) {
         let jsonContent: [String: Any] = ["name": "MUDKit Demo", "version": 1.0]
-        if
-            FileManager.default.fileExists(atPath: url.path) == false,
-            let jsonData = try? JSONSerialization.data(withJSONObject: jsonContent, options: .prettyPrinted)
-        {
-            try? jsonData.write(to: url)
+        
+        guard let jsonData = try? JSONSerialization.data(withJSONObject: jsonContent, options: .prettyPrinted) else {
+            return
         }
+        
+        createFile(fromData: jsonData, atUrl: url)
     }
     
     private static func createSamplePngFile(at url: URL) {
-        if FileManager.default.fileExists(atPath: url.path) == false {
-            let imageConfig = UIImage.SymbolConfiguration(pointSize: 100, weight: .bold)
-            let image = UIImage(systemName: "star", withConfiguration: imageConfig)
-            
-            if let imageData = image?.pngData() {
-                try? imageData.write(to: url)
-            }
+        let imageConfig = UIImage.SymbolConfiguration(pointSize: 100, weight: .bold)
+        let image = UIImage(systemName: "star", withConfiguration: imageConfig)
+        
+        guard let imageData = image?.pngData() else {
+            return
         }
+        
+        createFile(fromData: imageData, atUrl: url)
     }
     
     private static func createSampleHtmlFile(at url: URL) {
         let htmlContent = """
-    <!DOCTYPE html>
-    <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>MUDKit Demo</title>
-    </head>
-    <body>
-        <h1>Welcome to MUDKit Demo</h1>
-        <p>This is a sample HTML file created for testing MUDKit's file system features.</p>
-    </body>
-    </html>
-    """
-        if FileManager.default.fileExists(atPath: url.path) == false {
-            try? htmlContent.write(to: url, atomically: true, encoding: .utf8)
+            <!DOCTYPE html>
+            <head>
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>MUDKit Demo</title>
+            </head>
+            <body>
+                <h1>Welcome to MUDKit Demo</h1>
+                <p>This is a sample HTML file created for testing MUDKit's file system features.</p>
+            </body>
+            </html>
+        """
+        
+        guard let htmlData = htmlContent.data(using: .utf8) else {
+            return
         }
+        
+        createFile(fromData: htmlData, atUrl: url)
     }
     
     private static func constructDirectoryPath(_ directory: DirectoryType) -> URL? {
         switch directory {
         case .documents:
-            guard let url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
-                return nil
-            }
-
-            return url
+            return FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
         case .temporary:
             return URL(fileURLWithPath: FileManager.default.temporaryDirectory.path, isDirectory: true)
+        }
+    }
+    
+    private static func createFile(fromData data: Data, atUrl url: URL) {
+        if FileManager.default.fileExists(atPath: url.path) == false {
+            try? data.write(to: url)
         }
     }
 }

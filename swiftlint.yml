@@ -3,7 +3,7 @@ disabled_rules:
   - colon
   - type_body_length
   - notification_center_detachment
-  - todo
+  - generic_type_name
   
 opt_in_rules:
   - array_init
@@ -97,12 +97,12 @@ function_body_length:
 line_length: 120
 
 file_length:
-  warning: 350
+  warning: 300
   error: 500
 
 closure_body_length:
-  warning: 200
-  error: 300
+  warning: 70
+  error: 70
 
 type_name:
   min_length: 1
@@ -121,7 +121,7 @@ function_parameter_count:
   error: 10
   
 cyclomatic_complexity:
-  warning: 9
+  warning: 8
   error: 20
   
 nesting:
@@ -133,7 +133,7 @@ custom_rules:
   # Избегаем многострочных комментариев /* ... */
   no_multiline_comments:
     name: "No Multiline Comments"
-    regex: "/\\*(?!@[^@]*@)[^*]*\\*+([^/*][^*]*\\*+)*/"
+    regex: "/\\*[^*]*\\*+([^/*][^*]*\\*+)*/"
     match_kinds: comment
     message: "Use // instead of /* ... */ for comments."
     severity: warning
@@ -195,7 +195,7 @@ custom_rules:
     regex: "[\\x{1F300}-\\x{1F5FF}\\x{1F600}-\\x{1F64F}\\x{1F680}-\\x{1F6FF}\\x{1F900}-\\x{1F9FF}]"
     message: "Do not use emoji in code."
     severity: warning
-
+    
 warning_threshold: 1
 
 reporter: "xcode"
