@@ -1,7 +1,7 @@
 import Foundation
 
 final class FileSystemService {
-    func constructDirectoryPath(_ directory: FileSystemServiceDirectoryType) -> URL? {
+    func constructDirectoryUrl(_ directory: FileSystemServiceDirectoryType) -> URL? {
         switch directory {
         case .documents:
             return FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
