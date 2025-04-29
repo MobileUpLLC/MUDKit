@@ -10,18 +10,9 @@ struct FileContentView: View {
     
     var body: some View {
         Group {
-            if contentType?.conforms(to: .image) ?? false {
-                if let image = UIImage(contentsOfFile: fileUrl.path) {
-                    Image(uiImage: image)
-                        .resizable()
-                        .scaledToFit()
-                } else {
-                    Text("Unable to load image")
-                }
-            } else if
-                (contentType?.conforms(to: .html) ?? false)
-                || (contentType?.conforms(to: .json) ?? false)
-                || (contentType?.conforms(to: .xml) ?? false)
+            if
+                let contentType,
+                checkWebViewTypeConformance(type: contentType)
             {
                 WebView(url: fileUrl)
             } else {
@@ -35,5 +26,17 @@ struct FileContentView: View {
                 }
             }
         }
+    }
+    
+    private func checkWebViewTypeConformance(type: UTType) -> Bool {
+        let conformingTypes: [UTType] = [.image, .movie, .mp3, .aiff, .html, .json, .xml]
+        
+        for conformingType in conformingTypes {
+            if type.conforms(to: conformingType) {
+                return true
+            }
+        }
+        
+        return false
     }
 }
