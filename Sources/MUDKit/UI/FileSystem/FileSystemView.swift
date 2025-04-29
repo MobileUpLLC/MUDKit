@@ -2,10 +2,10 @@ import SwiftUI
 
 struct FileSystemView: View {
     @State private var files: [URL] = []
-    @State private var currentDirectoryUrl: URL? { didSet { updateIsRootDirectory() } }
+    @State private var currentDirectoryUrl: URL?
     @State private var selectedFile: URL?
     @State private var errorMessage = ""
-    @State private var isErrorShown = false
+    @State private var isErrorPresented = false
     @State private var isCopied = false
     @State private var isFileOpened = false
     @State private var isRootDirectory = true
@@ -42,6 +42,7 @@ struct FileSystemView: View {
                             .frame(width: 24, height: 24)
                     }
                     .disabled(isCopied)
+                    .padding(.trailing, 20)
                 }
             }
             List {
@@ -87,27 +88,19 @@ struct FileSystemView: View {
         }
         .sheet(isPresented: $isFileOpened) {
             if let selectedFile {
-                FileViewer(fileURL: selectedFile)
+                FileViewer(fileUrl: selectedFile)
             } else {
                 EmptyView()
             }
         }
-        .alert(isPresented: $isErrorShown) {
+        .alert(isPresented: $isErrorPresented) {
             Alert(title: Text("Error"), message: Text(errorMessage), dismissButton: .default(Text("OK")))
         }
     }
     
     init() {
-        documentsDirectoryUrl = fileSystemService.constructPath(
-            directory: .documents,
-            fileName: nil,
-            fileExtension: nil
-        )
-        temporaryDirectoryUrl = fileSystemService.constructPath(
-            directory: .temporary,
-            fileName: nil,
-            fileExtension: nil
-        )
+        documentsDirectoryUrl = fileSystemService.constructDirectoryPath(.documents)
+        temporaryDirectoryUrl = fileSystemService.constructDirectoryPath(.temporary)
     }
     
     private func isDirectory(_ url: URL) -> Bool {
@@ -115,7 +108,7 @@ struct FileSystemView: View {
     }
     
     private func loadDirectory(directory: FileSystemServiceDirectoryType) {
-        guard let url = fileSystemService.constructPath(directory: directory, fileName: nil, fileExtension: nil) else {
+        guard let url = fileSystemService.constructDirectoryPath(directory) else {
             return showErrorMessage("Невозможно загрузить директорию \(directory)")
         }
         
@@ -130,63 +123,61 @@ struct FileSystemView: View {
         loadContentOfUrl(url: url)
     }
     
-    private func loadContentOfUrl(url: URL) {
-        guard let content = fileSystemService.getContentOfUrl(url)
-                
-        else {
-            return showErrorMessage("Невозможно загрузить директорию \(url.absoluteString)")
-        }
-
-        currentDirectoryUrl = url
-        files = content
-    }
-    
     private func deleteFile(at url: URL) {
         if fileSystemService.deleteFile(at: url) {
-            guard
-                let currentDirectoryUrl,
-                let content = fileSystemService.getContentOfUrl(currentDirectoryUrl)
-            else {
+            guard let currentDirectoryUrl else {
                 return showErrorMessage("Невозможно обновить директорию")
             }
             
-            files = content
+            loadContentOfUrl(url: currentDirectoryUrl)
         } else {
             showErrorMessage("Невозможно удалить файл")
         }
     }
     
-    private func updateIsRootDirectory() {
+    private func loadContentOfUrl(url: URL) {
+        guard let content = fileSystemService.getContentOfUrl(url) else {
+            return showErrorMessage("Невозможно загрузить директорию \(url.absoluteString)")
+        }
+
+        updateCurrentDirectoryUrl(url)
+        files = content
+    }
+    
+    private func updateCurrentDirectoryUrl(_ url: URL) {
+        currentDirectoryUrl = url
         isRootDirectory = currentDirectoryUrl == documentsDirectoryUrl || currentDirectoryUrl == temporaryDirectoryUrl
     }
     
     private func copyDirectoryPath() {
-        if let currentDirectoryUrl {
-            isCopied = true
-            
-            UIPasteboard.general.string = currentDirectoryUrl.absoluteString
-            
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-                isCopied = false
-            }
+        guard let currentDirectoryUrl else {
+            return
+        }
+        
+        isCopied = true
+        UIPasteboard.general.string = currentDirectoryUrl.absoluteString
+        
+        Task { @MainActor in
+            try await Task.sleep(nanoseconds: 1_500_000_000)
+            isCopied = false
         }
     }
     
     private func showErrorMessage(_ message: String) {
         errorMessage = message
-        isErrorShown = true
+        isErrorPresented = true
     }
 }
 
 private struct FileViewer: View {
-    let fileURL: URL
+    let fileUrl: URL
     
     @SwiftUI.Environment(\.dismiss) private var dismiss
     
     var body: some View {
         NavigationView {
-            FileContentView(fileURL: fileURL)
-                .navigationTitle(fileURL.lastPathComponent)
+            FileContentView(fileUrl: fileUrl)
+                .navigationTitle(fileUrl.lastPathComponent)
                 .navigationBarItems(trailing: Button("Close") { dismiss() })
         }
     }
