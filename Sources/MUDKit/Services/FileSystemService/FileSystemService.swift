@@ -1,24 +1,13 @@
 import Foundation
 
 final class FileSystemService {
-    func constructPath(
-        directory: FileSystemServiceDirectoryType,
-        fileName: String?,
-        fileExtension: String?
-    ) -> URL? {
-        guard var url = constructDirectoryPath(directory) else {
-            return nil
+    func constructDirectoryPath(_ directory: FileSystemServiceDirectoryType) -> URL? {
+        switch directory {
+        case .documents:
+            return FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
+        case .temporary:
+            return URL(fileURLWithPath: FileManager.default.temporaryDirectory.path, isDirectory: true)
         }
-
-        if let fileName {
-            url = url.appendingPathComponent(fileName)
-        }
-        
-        if let fileExtension {
-            url = url.appendingPathExtension(fileExtension)
-        }
-
-        return url
     }
     
     func getContentOfUrl(_ url: URL) -> [URL]? {
@@ -40,14 +29,5 @@ final class FileSystemService {
         }
 
         return (try? FileManager.default.removeItem(at: url)) != nil
-    }
-    
-    private func constructDirectoryPath(_ directory: FileSystemServiceDirectoryType) -> URL? {
-        switch directory {
-        case .documents:
-            return FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
-        case .temporary:
-            return URL(fileURLWithPath: FileManager.default.temporaryDirectory.path, isDirectory: true)
-        }
     }
 }
