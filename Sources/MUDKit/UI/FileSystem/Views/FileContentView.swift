@@ -31,12 +31,6 @@ struct FileContentView: View {
     private func checkWebViewTypeConformance(type: UTType) -> Bool {
         let conformingTypes: [UTType] = [.image, .movie, .mp3, .aiff, .html, .json, .xml]
         
-        for conformingType in conformingTypes {
-            if type.conforms(to: conformingType) {
-                return true
-            }
-        }
-        
-        return false
+        return conformingTypes.contains(where: { type.conforms(to: $0) })
     }
 }
