@@ -22,6 +22,7 @@ xcshareddata/
 *.moved-aside
 *.xccheckout
 *.xcscmblueprint
+*.xcworkspacedata
 
 # Swift Package Manager
 .build/

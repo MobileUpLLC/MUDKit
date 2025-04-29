@@ -112,8 +112,8 @@ struct FileSystemView: View {
     }
     
     init() {
-        documentsDirectoryUrl = fileSystemService.constructDirectoryPath(.documents)
-        temporaryDirectoryUrl = fileSystemService.constructDirectoryPath(.temporary)
+        documentsDirectoryUrl = fileSystemService.constructDirectoryUrl(.documents)
+        temporaryDirectoryUrl = fileSystemService.constructDirectoryUrl(.temporary)
     }
     
     private func isDirectory(_ url: URL) -> Bool {
@@ -121,7 +121,7 @@ struct FileSystemView: View {
     }
     
     private func loadDirectory(directory: FileSystemServiceDirectoryType) {
-        guard let url = fileSystemService.constructDirectoryPath(directory) else {
+        guard let url = fileSystemService.constructDirectoryUrl(directory) else {
             return showErrorMessage("Невозможно загрузить директорию \(directory)")
         }
         
@@ -137,15 +137,14 @@ struct FileSystemView: View {
     }
     
     private func deleteFile(at url: URL) {
-        if fileSystemService.deleteFile(at: url) {
-            guard let currentDirectoryUrl else {
-                return showErrorMessage("Невозможно обновить директорию")
-            }
-            
-            loadContentOfUrl(url: currentDirectoryUrl)
-        } else {
-            showErrorMessage("Невозможно удалить файл")
+        guard
+            let currentDirectoryUrl,
+            fileSystemService.deleteFile(at: url)
+        else {
+            return showErrorMessage("Невозможно удалить файл")
         }
+        
+        loadContentOfUrl(url: currentDirectoryUrl)
     }
     
     private func loadContentOfUrl(url: URL) {
@@ -171,7 +170,7 @@ struct FileSystemView: View {
         UIPasteboard.general.string = currentDirectoryUrl.absoluteString
         
         Task { @MainActor in
-            try await Task.sleep(nanoseconds: 1_500_000_000)
+            try await Task.sleep(for: .seconds(1.5))
             isCopied = false
         }
     }
