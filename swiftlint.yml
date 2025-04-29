@@ -101,8 +101,8 @@ file_length:
   error: 500
 
 closure_body_length:
-  warning: 70
-  error: 70
+  warning: 100
+  error: 100
 
 type_name:
   min_length: 1

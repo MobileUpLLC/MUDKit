@@ -77,6 +77,7 @@ struct FileSystemView: View {
                                 Image(systemName: "square.and.arrow.up")
                                     .onTapGesture {
                                         fileUrlToShare = url
+                                        url.startAccessingSecurityScopedResource()
                                         isShareSheetPresented = true
                                     }
                                 Text("Delete")
@@ -105,6 +106,10 @@ struct FileSystemView: View {
             Alert(title: Text("Error"), message: Text(errorMessage), dismissButton: .default(Text("OK")))
         }
         .sheet(isPresented: $isShareSheetPresented) {
+            if let fileUrlToShare {
+                fileUrlToShare.stopAccessingSecurityScopedResource()
+            }
+        } content: {
             if let fileUrlToShare {
                 ShareSheetView(activityItems: [fileUrlToShare])
             }

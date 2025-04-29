@@ -9,6 +9,7 @@ struct ShareSheetView: UIViewControllerRepresentable {
             activityItems: activityItems,
             applicationActivities: applicationActivities
         )
+        
         return controller
     }
 
