@@ -8,8 +8,10 @@ struct FileSystemView: View {
     @State private var isErrorPresented = false
     @State private var isCopied = false
     @State private var isFileOpened = false
+    @State private var isShareSheetPresented = false
     @State private var isRootDirectory = true
-    
+    @State private var sharingUrl: URL?
+
     private let documentsDirectoryUrl: URL?
     private let temporaryDirectoryUrl: URL?
     
@@ -55,28 +57,40 @@ struct FileSystemView: View {
                 }
                 ForEach(files, id: \.self) { url in
                     HStack {
-                        Button {
-                            if isDirectory(url) {
-                                loadContentOfUrl(url: url)
-                            } else {
-                                selectedFile = url
-                                isFileOpened = true
+                        VStack(alignment: .leading, spacing: 4) {
+                            HStack {
+                                Image(systemName: isDirectory(url) ? "folder" : "doc")
+                                Text(url.lastPathComponent)
                             }
-                        } label: {
-                            VStack(alignment: .leading, spacing: 4) {
-                                HStack {
-                                    Image(systemName: isDirectory(url) ? "folder" : "doc")
-                                    Text(url.lastPathComponent)
+                            .onTapGesture {
+                                if isDirectory(url) {
+                                    loadContentOfUrl(url: url)
+                                } else {
+                                    isFileOpened = true
+                                    
+                                    Task {
+                                        self.selectedFile = url
+                                    }
                                 }
                             }
                         }
-                        .buttonStyle(.plain)
-                        Spacer()
+                        Spacer(minLength: 20)
                         if isDirectory(url) == false {
-                            Button("Delete") {
-                                deleteFile(at: url)
+                            HStack(spacing: 20) {
+                                Image(systemName: "square.and.arrow.up")
+                                    .onTapGesture {
+                                        isShareSheetPresented = true
+
+                                        Task {
+                                            self.sharingUrl = url
+                                        }
+                                    }
+                                Text("Delete")
+                                    .foregroundColor(.red)
+                                    .onTapGesture {
+                                        deleteFile(at: url)
+                                    }
                             }
-                            .foregroundColor(.red)
                         }
                     }
                 }
@@ -87,14 +101,28 @@ struct FileSystemView: View {
             loadDirectory(directory: .documents)
         }
         .sheet(isPresented: $isFileOpened) {
+            selectedFile = nil
+        } content: {
             if let selectedFile {
                 FileViewer(fileUrl: selectedFile)
             } else {
-                EmptyView()
+                ProgressView()
             }
         }
         .alert(isPresented: $isErrorPresented) {
             Alert(title: Text("Error"), message: Text(errorMessage), dismissButton: .default(Text("OK")))
+        }
+        .sheet(isPresented: $isShareSheetPresented) {
+            sharingUrl = nil
+        } content: {
+            Group {
+                if let sharingUrl {
+                    ShareSheetView(activityItems: [sharingUrl])
+                } else {
+                    ProgressView()
+                }
+            }
+            .ignoresSafeArea()
         }
     }
     

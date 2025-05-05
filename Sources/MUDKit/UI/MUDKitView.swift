@@ -2,6 +2,7 @@ import SwiftUI
 import Pulse
 import PulseUI
 
+/// The main debug interface for MUDKit, providing access to various tools.
 public struct MUDKitView<Content: View>: View {
     private let pulseStore: LoggerStore
     private let pulseMode: ConsoleMode

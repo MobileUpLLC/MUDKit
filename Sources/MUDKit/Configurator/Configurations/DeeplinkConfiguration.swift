@@ -1,5 +1,6 @@
 import Foundation
 
+/// Configuration for handling deeplinks in the application.
 public struct DeeplinkConfiguration: Sendable {
     let deeplinkHandler: @Sendable (URL) -> Void
     

@@ -1,5 +1,6 @@
 import Foundation
 
+/// Represents an environment configuration.
 public struct Environment: Codable, Hashable, Identifiable, Sendable {
     public let id: UUID
     let name: String
