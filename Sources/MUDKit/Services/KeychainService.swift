@@ -1,6 +1,6 @@
 import KeychainSwift
 
-struct KeychainService {
+enum KeychainService {
     static func clear() {
         KeychainSwift().clear()        
     }

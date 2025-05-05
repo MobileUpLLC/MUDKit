@@ -1,5 +1,6 @@
 import Foundation
 
+/// The main configuration for MUDKit, combining settings for various features.
 public struct MUDKitConfiguration: Sendable {
     public let pulseSession: URLSession?
     public let featureToggleConfiguration: FeatureToggleConfiguration?

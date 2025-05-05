@@ -2,6 +2,7 @@ import Foundation
 import os
 import Pulse
 
+/// A logging utility with support for different log levels and Pulse integration.
 public struct Log: Sendable {
     public enum LogEntry {
         case text(String)
@@ -18,22 +19,32 @@ public struct Log: Sendable {
         self.isLoggingNeeded = isLoggingNeeded
     }
     
+    /// Logs a debug-level message.
+    /// - Parameter logEntry: The log entry to record.
     public func debug(logEntry: LogEntry) {
         log(level: .debug, logEntry: logEntry)
     }
     
+    /// Logs an info-level message.
+    /// - Parameter logEntry: The log entry to record.
     public func info(logEntry: LogEntry) {
         log(level: .info, logEntry: logEntry)
     }
     
+    /// Logs a default-level message.
+    /// - Parameter logEntry: The log entry to record.
     public func `default`(logEntry: LogEntry) {
         log(level: .default, logEntry: logEntry)
     }
     
+    /// Logs an error-level message.
+    /// - Parameter logEntry: The log entry to record.
     public func error(logEntry: LogEntry) {
         log(level: .error, logEntry: logEntry)
     }
     
+    /// Logs a fault-level message.
+    /// - Parameter logEntry: The log entry to record.
     public func fault(logEntry: LogEntry) {
         log(level: .fault, logEntry: logEntry)
     }

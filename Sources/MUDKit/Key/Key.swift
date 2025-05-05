@@ -1,4 +1,4 @@
-/// Тип ответственный за хранение ключей, используемых при CRUD операциях с UserDefaults или Keychain.
+/// Enum for keys used in UserDefaults or Keychain CRUD operations.
 enum Key: String {
     case isOverrideBaseConfig
     case featureToggles

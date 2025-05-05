@@ -1,3 +1,4 @@
+/// Represents a feature toggle.
 public struct FeatureToggle: Hashable, Codable, Sendable {
     let name: String
     let convenientName: String
