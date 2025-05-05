@@ -3,11 +3,9 @@ import SwiftUI
 struct FileSystemView: View {
     @State private var files: [URL] = []
     @State private var currentDirectoryUrl: URL?
-    @State private var selectedFile: URL?
     @State private var errorMessage = ""
     @State private var isErrorPresented = false
     @State private var isCopied = false
-    @State private var isFileOpened = false
     @State private var isShareSheetPresented = false
     @State private var isRootDirectory = true
     @State private var sharingUrl: URL?
@@ -65,12 +63,6 @@ struct FileSystemView: View {
                             .onTapGesture {
                                 if isDirectory(url) {
                                     loadContentOfUrl(url: url)
-                                } else {
-                                    isFileOpened = true
-                                    
-                                    Task {
-                                        self.selectedFile = url
-                                    }
                                 }
                             }
                         }
@@ -99,15 +91,6 @@ struct FileSystemView: View {
         .navigationTitle("File System")
         .onAppear {
             loadDirectory(directory: .documents)
-        }
-        .sheet(isPresented: $isFileOpened) {
-            selectedFile = nil
-        } content: {
-            if let selectedFile {
-                FileViewer(fileUrl: selectedFile)
-            } else {
-                ProgressView()
-            }
         }
         .alert(isPresented: $isErrorPresented) {
             Alert(title: Text("Error"), message: Text(errorMessage), dismissButton: .default(Text("OK")))
@@ -193,20 +176,6 @@ struct FileSystemView: View {
     private func showErrorMessage(_ message: String) {
         errorMessage = message
         isErrorPresented = true
-    }
-}
-
-private struct FileViewer: View {
-    let fileUrl: URL
-    
-    @SwiftUI.Environment(\.dismiss) private var dismiss
-    
-    var body: some View {
-        NavigationView {
-            FileContentView(fileUrl: fileUrl)
-                .navigationTitle(fileUrl.lastPathComponent)
-                .navigationBarItems(trailing: Button("Close") { dismiss() })
-        }
     }
 }
 
