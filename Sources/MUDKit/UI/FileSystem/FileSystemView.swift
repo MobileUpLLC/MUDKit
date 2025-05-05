@@ -6,12 +6,12 @@ struct FileSystemView: View {
     @State private var selectedFile: URL?
     @State private var errorMessage = ""
     @State private var isErrorPresented = false
-    @State private var fileUrlToShare: URL?
     @State private var isCopied = false
     @State private var isFileOpened = false
     @State private var isShareSheetPresented = false
     @State private var isRootDirectory = true
-    
+    @State private var sharingUrl: URL?
+
     private let documentsDirectoryUrl: URL?
     private let temporaryDirectoryUrl: URL?
     
@@ -66,8 +66,11 @@ struct FileSystemView: View {
                                 if isDirectory(url) {
                                     loadContentOfUrl(url: url)
                                 } else {
-                                    selectedFile = url
                                     isFileOpened = true
+                                    
+                                    Task {
+                                        self.selectedFile = url
+                                    }
                                 }
                             }
                         }
@@ -76,9 +79,11 @@ struct FileSystemView: View {
                             HStack(spacing: 20) {
                                 Image(systemName: "square.and.arrow.up")
                                     .onTapGesture {
-                                        fileUrlToShare = url
-                                        url.startAccessingSecurityScopedResource()
                                         isShareSheetPresented = true
+
+                                        Task {
+                                            self.sharingUrl = url
+                                        }
                                     }
                                 Text("Delete")
                                     .foregroundColor(.red)
@@ -96,23 +101,28 @@ struct FileSystemView: View {
             loadDirectory(directory: .documents)
         }
         .sheet(isPresented: $isFileOpened) {
+            selectedFile = nil
+        } content: {
             if let selectedFile {
                 FileViewer(fileUrl: selectedFile)
             } else {
-                EmptyView()
+                ProgressView()
             }
         }
         .alert(isPresented: $isErrorPresented) {
             Alert(title: Text("Error"), message: Text(errorMessage), dismissButton: .default(Text("OK")))
         }
         .sheet(isPresented: $isShareSheetPresented) {
-            if let fileUrlToShare {
-                fileUrlToShare.stopAccessingSecurityScopedResource()
-            }
+            sharingUrl = nil
         } content: {
-            if let fileUrlToShare {
-                ShareSheetView(activityItems: [fileUrlToShare])
+            Group {
+                if let sharingUrl {
+                    ShareSheetView(activityItems: [sharingUrl])
+                } else {
+                    ProgressView()
+                }
             }
+            .ignoresSafeArea()
         }
     }
     
