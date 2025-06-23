@@ -1,12 +1,12 @@
 import SwiftUI
 
 struct EnvironmentView: View {
-    @State var environments: [Environment] = MUDKitConfigurator
+    @State var environments: [MUDEnvironment] = MUDKitConfigurator
         .configuration?
         .environmentConfiguration?
         .environments ?? []
     
-    @State private var selectedEnvironment: Environment? = MUDKitConfigurator
+    @State private var selectedEnvironment: MUDEnvironment? = MUDKitConfigurator
         .configuration?
         .environmentConfiguration?
         .selectedEnvironment
