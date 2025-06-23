@@ -1,11 +1,12 @@
 import Foundation
 
 /// Configuration for managing multiple environments (e.g., dev, prod).
-public struct EnvironmentConfiguration: Sendable {
+public struct MUDEnvironmentConfiguration: Sendable {
+    public let selectedEnvironment: Environment?
+
     let environments: [Environment]
     let defaultEnvironmentId: UUID
-    let selectedEnvironment: Environment?
-    
+
     public init(
         environments: [Environment],
         defaultEnvironmentId: UUID

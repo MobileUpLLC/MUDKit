@@ -1,13 +1,13 @@
 import Foundation
 
 /// The main configuration for MUDKit, combining settings for various features.
-public struct MUDKitConfiguration: Sendable {
+public struct MUDConfiguration: Sendable {
     public let pulseSession: URLSession?
     public let featureToggleConfiguration: FeatureToggleConfiguration?
     public let deeplinkConfiguration: DeeplinkConfiguration?
-    public let environmentConfiguration: EnvironmentConfiguration?
+    public let environmentConfiguration: MUDEnvironmentConfiguration?
     
-    static let empty = MUDKitConfiguration(
+    static let empty = MUDConfiguration(
         pulseSession: nil,
         featureToggleConfiguration: nil,
         deeplinkConfiguration: nil,
@@ -18,7 +18,7 @@ public struct MUDKitConfiguration: Sendable {
         pulseSession: URLSession?,
         featureToggleConfiguration: FeatureToggleConfiguration?,
         deeplinkConfiguration: DeeplinkConfiguration?,
-        environmentConfiguration: EnvironmentConfiguration?
+        environmentConfiguration: MUDEnvironmentConfiguration?
     ) {
         self.pulseSession = pulseSession
         self.featureToggleConfiguration = featureToggleConfiguration
