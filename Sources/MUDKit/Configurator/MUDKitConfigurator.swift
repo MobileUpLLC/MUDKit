@@ -1,6 +1,6 @@
 /// A thread-safe configurator for setting up MUDKit with various configurations.
 public actor MUDKitConfigurator {
-    public static var configuration: MUDKitConfiguration?
+    public static var configuration: MUDConfiguration?
     
     /// Configures MUDKit with provided settings and returns the resulting configuration.
     /// - Parameters:
@@ -13,9 +13,9 @@ public actor MUDKitConfigurator {
         pulseConfiguration: PulseConfiguration?,
         featureToggleConfiguration: FeatureToggleConfiguration?,
         deeplinkConfiguration: DeeplinkConfiguration?,
-        environmentConfiguration: EnvironmentConfiguration?
-    ) -> MUDKitConfiguration {
-        configuration = MUDKitConfiguration(
+        environmentConfiguration: MUDEnvironmentConfiguration?
+    ) -> MUDConfiguration {
+        configuration = MUDConfiguration(
             pulseSession: pulseConfiguration?.setup(),
             featureToggleConfiguration: resolveActualFeatureToggleConfiguration(featureToggleConfiguration),
             deeplinkConfiguration: deeplinkConfiguration,

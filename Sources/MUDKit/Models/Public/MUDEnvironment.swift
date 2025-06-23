@@ -1,10 +1,11 @@
 import Foundation
 
 /// Represents an environment configuration.
-public struct Environment: Codable, Hashable, Identifiable, Sendable {
+public struct MUDEnvironment: Codable, Hashable, Identifiable, Sendable {
     public let id: UUID
+    public let parameters: [String: String]
+
     let name: String
-    let parameters: [String: String]
     
     public init(id: UUID, name: String, parameters: [String: String]) {
         self.id = id

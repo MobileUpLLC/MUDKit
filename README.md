@@ -32,7 +32,7 @@ import MUDKit
 let devEnvironment = Environment(id: UUID(), name: "dev", parameters: ["api": "https://dev.api.com"])
 let prodEnvironment = Environment(id: UUID(), name: "prod", parameters: ["api": "https://prod.api.com"])
 
-let configuration = await MUDKitConfigurator.setup(
+let configuration = await MUDConfigurator.setup(
     pulseConfiguration: PulseConfiguration(
         configuration: .default,
         sessionDelegate: SessionDelegate(),
@@ -44,7 +44,7 @@ let configuration = await MUDKitConfigurator.setup(
     deeplinkConfiguration: DeeplinkConfiguration { url in
         print("Received deeplink: \(url)")
     },
-    environmentConfiguration: EnvironmentConfiguration(
+    environmentConfiguration: MUDEnvironmentConfiguration(
         environments: [devEnvironment, prodEnvironment],
         defaultEnvironmentId: devEnvironment.id
     )
