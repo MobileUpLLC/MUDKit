@@ -1,5 +1,6 @@
 /// A thread-safe configurator for setting up MUDKit with various configurations.
 public actor MUDKitConfigurator {
+    @MainActor
     public static var configuration: MUDConfiguration?
     
     /// Configures MUDKit with provided settings and returns the resulting configuration.
@@ -9,6 +10,7 @@ public actor MUDKitConfigurator {
     ///   - deeplinkConfiguration: Configuration for handling deeplinks. Optional.
     ///   - environmentConfiguration: Configuration for environment settings. Optional.
     /// - Returns: The configured `MUDKitConfiguration` or an empty configuration if setup fails.
+    @MainActor
     public static func setup(
         pulseConfiguration: PulseConfiguration?,
         featureToggleConfiguration: FeatureToggleConfiguration?,
